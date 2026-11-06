@@ -71,31 +71,28 @@ export default function Skills({ props }: AppProps) {
       <div ref={scroller} className="scroll-thin @container min-h-0 flex-1 overflow-y-auto px-5 py-4">
         <p className="mb-4 text-[12px] text-[var(--text-3)]">Hover or tap a skill to see what it is and where it shows up in this portfolio. No made-up percentages.</p>
         {groups.length === 0 && <div className="py-12 text-center text-[13px] text-[var(--text-3)]">No skills match “{query}”.</div>}
-        <AnimatePresence mode="popLayout">
-          {groups.map((g) => (
-            <motion.section key={g.id} layout initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mb-6">
+        <div key={group + query}>
+          {groups.map((g, gi) => (
+            <motion.section key={g.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: Math.min(gi, 4) * 0.03 }} className="mb-6">
               <h2 className="mb-2.5 flex items-center gap-2 text-[13px] font-bold">
                 <span className="h-2.5 w-2.5 rounded-full" style={{ background: groupColor[g.id] }} />
                 {g.name}
                 <span className="font-normal text-[var(--text-3)]">{g.skills.length}</span>
               </h2>
               <div className="grid grid-cols-2 gap-2 @[520px]:grid-cols-3 @[760px]:grid-cols-4">
-                {g.skills.map((s, i) => {
+                {g.skills.map((s) => {
                   const active = focus === s
                   const uses = active ? usedIn(s) : []
                   return (
-                    <motion.div
+                    <div
                       key={s}
                       data-skill={s}
-                      layout
-                      initial={{ opacity: 0, scale: 0.96 }}
-                      animate={{ opacity: 1, scale: 1, transition: { delay: i * 0.015 } }}
                       onPointerEnter={(e) => e.pointerType === 'mouse' && setFocus(s)}
                       onPointerLeave={(e) => e.pointerType === 'mouse' && setFocus((f) => (f === s ? null : f))}
                       onClick={() => setFocus(active ? null : s)}
                       tabIndex={0}
                       onFocus={() => setFocus(s)}
-                      className="relative cursor-default overflow-hidden rounded-[12px] border p-3 outline-none transition-colors"
+                      className="relative cursor-default self-start overflow-hidden rounded-[12px] border p-3 outline-none transition-colors duration-150"
                       style={{ borderColor: active ? groupColor[g.id] : 'var(--border)', background: active ? `${groupColor[g.id]}14` : 'var(--surface-3)' }}
                     >
                       <div className="text-[13px] font-semibold leading-snug">{s}</div>
@@ -123,13 +120,13 @@ export default function Skills({ props }: AppProps) {
                           </motion.div>
                         )}
                       </AnimatePresence>
-                    </motion.div>
+                    </div>
                   )
                 })}
               </div>
             </motion.section>
           ))}
-        </AnimatePresence>
+        </div>
       </div>
     </div>
   )

@@ -130,10 +130,8 @@ function NowWidget() {
   return (
     <Card label="Currently working on" delay={0.15} wide onClick={() => openApp('experience')}>
       <div className="mb-2 flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-[var(--text-3)]">
-        <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-        </span>
+        {/* A steady dot: an endless ping here would repaint this blurred widget every frame. */}
+        <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,.22)]" />
         Currently at {portfolio.currentRole.company}
       </div>
       <ul className="space-y-1.5 text-[12px] leading-snug">

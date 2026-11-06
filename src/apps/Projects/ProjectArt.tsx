@@ -10,7 +10,7 @@ function Mock({ p }: { p: Project }) {
       return (
         <div className="grid h-full grid-cols-5 grid-rows-6 gap-px overflow-hidden rounded-[6px] bg-white/30">
           {Array.from({ length: 30 }, (_, i) => (
-            <motion.div key={i} className="bg-white/80" initial={false} whileHover={{}} style={{ background: i < 5 ? a : i % 7 === 3 ? '#bbf7d0' : 'rgba(255,255,255,.85)' }} />
+            <div key={i} className="bg-white/80" style={{ background: i < 5 ? a : i % 7 === 3 ? '#bbf7d0' : 'rgba(255,255,255,.85)' }} />
           ))}
         </div>
       )
@@ -45,7 +45,7 @@ function Mock({ p }: { p: Project }) {
             <div className="ml-0.5 h-0 w-0 border-y-[6px] border-l-[9px] border-y-transparent" style={{ borderLeftColor: p.theme.to }} />
           </div>
           <div className="absolute inset-x-3 bottom-2 h-1 rounded-full bg-white/30">
-            <motion.div className="h-full rounded-full bg-white" animate={{ width: ['10%', '90%'] }} transition={{ duration: 6, repeat: Infinity, ease: 'linear' }} />
+            <motion.div className="h-full origin-left rounded-full bg-white" animate={{ scaleX: [0.1, 0.9] }} transition={{ duration: 6, repeat: Infinity, ease: 'linear' }} />
           </div>
         </div>
       )
@@ -166,8 +166,9 @@ function Mock({ p }: { p: Project }) {
 export function ProjectArt({ p, className = '' }: { p: Project; className?: string }) {
   return (
     <div className={`relative overflow-hidden ${className}`} style={{ background: `linear-gradient(135deg, ${p.theme.from}, ${p.theme.to})` }}>
-      <div className="absolute -right-8 -top-10 h-32 w-32 rounded-full bg-white/10 blur-xl" />
-      <div className="absolute inset-x-[12%] bottom-0 top-[18%] rounded-t-[10px] bg-white/10 p-[4%] shadow-[0_-4px_30px_rgba(0,0,0,.18)] backdrop-blur-[2px] transition-transform duration-500 group-hover:-translate-y-1.5">
+      {/* A soft highlight drawn with a gradient, not a blur filter, so twelve cards stay cheap to paint. */}
+      <div className="absolute -right-10 -top-12 h-40 w-40 rounded-full" style={{ background: 'radial-gradient(circle, rgba(255,255,255,.16), rgba(255,255,255,0) 70%)' }} />
+      <div className="absolute inset-x-[12%] bottom-0 top-[18%] rounded-t-[10px] bg-white/15 p-[4%] shadow-[0_-4px_24px_rgba(0,0,0,.16)] transition-transform duration-300 ease-out will-change-transform group-hover:-translate-y-1.5">
         <Mock p={p} />
       </div>
     </div>

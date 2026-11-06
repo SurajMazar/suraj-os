@@ -37,9 +37,9 @@ function Detail({ p, onBack }: { p: Project; onBack: () => void }) {
         </Button>
         <span className="truncate text-[13px] font-semibold">{p.name}</span>
       </div>
-      <motion.div layoutId={`art-${p.id}`} className="mx-6 mt-5 overflow-hidden rounded-[18px]">
+      <div className="mx-6 mt-5 overflow-hidden rounded-[18px]">
         <ProjectArt p={p} className="h-[220px]" />
-      </motion.div>
+      </div>
       <div className="grid gap-8 px-6 py-6 @[640px]:grid-cols-[1fr_230px]">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
@@ -179,22 +179,20 @@ export default function Projects({ windowId, props }: AppProps) {
           </div>
           {list.length === 0 && <div className="py-16 text-center text-[13px] text-[var(--text-3)]">No projects match. Try another filter.</div>}
           {view === 'grid' ? (
-            <motion.div layout className="grid gap-4 @[560px]:grid-cols-2 @[880px]:grid-cols-3">
-              <AnimatePresence>
-                {list.map((p, i) => (
+            // Keyed by the filter: switching filters fades the new set in. No layout animation,
+            // which would re-measure every card on every frame.
+            <div key={filter + query} className="grid gap-4 @[560px]:grid-cols-2 @[880px]:grid-cols-3">
+              {list.map((p, i) => (
                   <motion.button
-                    layout
                     key={p.id}
                     type="button"
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0, transition: { delay: i * 0.03 } }}
-                    exit={{ opacity: 0, scale: 0.96 }}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.22, ease: [0.2, 0.8, 0.2, 1], delay: Math.min(i, 6) * 0.025 }}
                     onClick={() => setOpenId(p.id)}
-                    className="group overflow-hidden rounded-[16px] bg-[var(--surface-3)] text-left shadow-[inset_0_0_0_.5px_var(--border)] transition hover:shadow-[0_10px_30px_rgba(0,0,0,.14),inset_0_0_0_.5px_var(--border)]"
+                    className="group overflow-hidden rounded-[16px] bg-[var(--surface-3)] text-left shadow-[inset_0_0_0_.5px_var(--border)] transition-shadow duration-200 hover:shadow-[0_10px_30px_rgba(0,0,0,.14),inset_0_0_0_.5px_var(--border)]"
                   >
-                    <motion.div layoutId={`art-${p.id}`}>
-                      <ProjectArt p={p} className="h-[140px]" />
-                    </motion.div>
+                    <ProjectArt p={p} className="h-[140px]" />
                     <div className="p-3.5">
                       <div className="flex items-center justify-between gap-2">
                         <span className="truncate text-[13px] font-semibold">{p.name}</span>
@@ -211,9 +209,8 @@ export default function Projects({ windowId, props }: AppProps) {
                       </div>
                     </div>
                   </motion.button>
-                ))}
-              </AnimatePresence>
-            </motion.div>
+              ))}
+            </div>
           ) : (
             <div className="divide-y divide-[var(--border)] overflow-hidden rounded-[12px] border border-[var(--border)]">
               {list.map((p) => (

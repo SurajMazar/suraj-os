@@ -282,9 +282,9 @@ export default function Finder({ windowId, props }: AppProps) {
                       }}
                       className="flex flex-col items-center gap-1 rounded-[8px] p-1.5 outline-none"
                     >
-                      <motion.div layout="position" className={`grid h-[62px] w-[70px] place-items-center rounded-[8px] ${selected === n.id ? 'bg-[var(--hover)]' : ''}`}>
+                      <div className={`grid h-[62px] w-[70px] place-items-center rounded-[8px] ${selected === n.id ? 'bg-[var(--hover)]' : ''}`}>
                         <FileIcon node={n} size={54} />
-                      </motion.div>
+                      </div>
                       <span className={`line-clamp-2 max-w-full break-words rounded-[4px] px-1 text-center text-[12px] leading-tight ${selected === n.id ? 'bg-[var(--selection)] text-white' : ''}`}>{n.name}</span>
                     </button>
                   ))}
