@@ -1,4 +1,4 @@
-import { memo, Suspense, useEffect, useRef, useState, type PointerEvent as RPointerEvent } from 'react'
+import { memo, Suspense, useEffect, useLayoutEffect, useRef, useState, type PointerEvent as RPointerEvent } from 'react'
 import { motion, type TargetAndTransition, type Transition } from 'motion/react'
 import { MENU_BAR_HEIGHT, useWindows, workArea } from '@/store/windowStore'
 import { useDesktop } from '@/store/desktopStore'
@@ -7,6 +7,10 @@ import { useReduceMotion } from '@/hooks/system'
 import type { MissionCell } from '@/lib/missionLayout'
 import type { Rect } from '@/types'
 import { TrafficLights } from './TrafficLights'
+import { GENIE_MS, UNGENIE_MS, genieKeyframes } from '@/lib/genie'
+
+/** Zoom (the green button) eases like macOS: a quick start that settles gently. */
+const ZOOM = '.36s cubic-bezier(.32,.72,0,1)'
 import { Spinner } from '@/components/shared/ui'
 import { AppCrashed, ErrorBoundary } from '@/components/shared/ErrorBoundary'
 
@@ -64,13 +68,52 @@ export const Window = memo(function Window({ id, cell, dimmed }: Props) {
     prevShape.current = shapeKey
     if (dragging.current || reduce) return
     setRectAnim(true)
-    const t = setTimeout(() => setRectAnim(false), 340)
+    const t = setTimeout(() => setRectAnim(false), 400)
     return () => clearTimeout(t)
   }, [shapeKey, reduce])
 
-  useEffect(() => {
-    if (!win.minimized) setHidden(false)
-  }, [win.minimized])
+  // Minimize and restore with the genie effect: into the window's thumbnail in the Dock, and back out.
+  const genie = useRef<{ anim: Animation | null; frames: Keyframe[] | null }>({ anim: null, frames: null })
+  const wasMinimized = useRef(win.minimized)
+  useLayoutEffect(() => {
+    if (wasMinimized.current === win.minimized) return
+    wasMinimized.current = win.minimized
+    const el = frameRef.current
+    const g = genie.current
+    g.anim?.cancel()
+    g.anim = null
+    if (!el || reduce) {
+      if (!win.minimized) setHidden(false)
+      return
+    }
+    if (win.minimized) {
+      const box = el.getBoundingClientRect()
+      const winBox = { x: box.left, y: box.top, w: box.width, h: box.height }
+      // Wait a frame so the Dock has made room for the thumbnail, then aim for it.
+      const raf = requestAnimationFrame(() => {
+        const thumb = document.querySelector(`[data-dock-window="${id}"]`) ?? document.querySelector('[data-dock-divider]')
+        const r = thumb?.getBoundingClientRect()
+        const dock = r ? { x: r.left, y: r.top, w: Math.max(r.width, 40), h: Math.max(r.height, 40) } : { x: innerWidth / 2 - 24, y: innerHeight - 56, w: 48, h: 48 }
+        g.frames = genieKeyframes(winBox, dock)
+        const anim = el.animate(g.frames, { duration: GENIE_MS, easing: 'linear', fill: 'forwards' })
+        g.anim = anim
+        anim.onfinish = () => {
+          if (useWindows.getState().windows[id]?.minimized) setHidden(true)
+        }
+      })
+      return () => cancelAnimationFrame(raf)
+    }
+    // Restore: the same path played backwards, starting from the Dock.
+    if (g.frames) {
+      const anim = el.animate(g.frames, { duration: UNGENIE_MS, easing: 'linear', direction: 'reverse', fill: 'backwards' })
+      g.anim = anim
+      anim.onfinish = () => {
+        anim.cancel()
+        if (g.anim === anim) g.anim = null
+      }
+    }
+    setHidden(false)
+  }, [win.minimized, reduce, id])
 
   // Keyboard focus follows window focus, so shortcuts never stay stuck in a window behind.
   const frameRef = useRef<HTMLDivElement>(null)
@@ -100,8 +143,8 @@ export const Window = memo(function Window({ id, cell, dimmed }: Props) {
 
   let target: TargetAndTransition
   if (win.minimized) {
-    const to = centerOf('[data-dock-divider]') ?? { x: window.innerWidth - 120, y: window.innerHeight - 30 }
-    target = reduce ? { opacity: 0 } : { opacity: 0, scale: 0.06, x: to.x - cx, y: to.y - cy }
+    // The genie effect (below) carries the window into the Dock; Motion holds still meanwhile.
+    target = reduce ? { opacity: 0 } : { opacity: 1, scale: 1, x: 0, y: 0 }
   } else if (cell) {
     target = { opacity: 1, scale: cell.scale, x: cell.dx, y: cell.dy }
   } else if (dimmed) {
@@ -254,7 +297,7 @@ export const Window = memo(function Window({ id, cell, dimmed }: Props) {
       exit={reduce ? { opacity: 0 } : { opacity: 0, scale: 0.94, transition: { duration: 0.16 } }}
       transition={transition}
       onAnimationComplete={() => {
-        if (useWindows.getState().windows[id]?.minimized) setHidden(true)
+        if (reduce && useWindows.getState().windows[id]?.minimized) setHidden(true)
       }}
       onPointerDownCapture={() => {
         if (!inMission) store().focus(id)
@@ -273,7 +316,7 @@ export const Window = memo(function Window({ id, cell, dimmed }: Props) {
         boxShadow: focused ? 'var(--window-shadow)' : 'var(--window-shadow-inactive)',
         visibility: hidden ? 'hidden' : 'visible',
         pointerEvents: win.minimized || dimmed || closing ? 'none' : 'auto',
-        transition: rectAnim ? 'left .32s cubic-bezier(.2,.8,.2,1), top .32s cubic-bezier(.2,.8,.2,1), width .32s cubic-bezier(.2,.8,.2,1), height .32s cubic-bezier(.2,.8,.2,1)' : 'box-shadow .2s',
+        transition: rectAnim ? `left ${ZOOM}, top ${ZOOM}, width ${ZOOM}, height ${ZOOM}, border-radius ${ZOOM}` : 'box-shadow .2s',
         willChange: 'transform',
       }}
     >

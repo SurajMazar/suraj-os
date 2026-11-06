@@ -259,7 +259,7 @@ export function Dock() {
                 ])
               }}
             >
-              <div className="relative h-full w-full rounded-[10px] bg-[var(--surface-solid)] p-[12%] shadow-[0_2px_8px_rgba(0,0,0,.3)]">
+              <div data-dock-window={wid} className="relative h-full w-full rounded-[10px] bg-[var(--surface-solid)] p-[12%] shadow-[0_2px_8px_rgba(0,0,0,.3)]">
                 <div className="grid h-full w-full place-items-center rounded-[6px] bg-[var(--surface-3)] text-[9px] font-semibold text-[var(--text-2)]">
                   <span className="line-clamp-2 px-0.5 text-center leading-tight">{w.title}</span>
                 </div>
