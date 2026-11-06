@@ -21,7 +21,7 @@ function Card({ children, className = '', onClick, label, delay = 0, wide = fals
         onClick={() => {
           if (!drag.wasDragged()) onClick?.()
         }}
-        className={`liquid glass relative h-full rounded-[20px] p-3.5 text-[var(--text)] shadow-[0_8px_30px_rgba(0,0,0,.18),inset_0_0_0_.5px_rgba(255,255,255,.25)] ${onClick ? 'cursor-default transition hover:brightness-110' : ''} ${className}`}
+        className={`liquid widget-glass relative h-full rounded-[20px] p-3.5 text-[var(--text)] shadow-[0_8px_30px_rgba(0,0,0,.18),inset_0_0_0_.5px_rgba(255,255,255,.25)] ${onClick ? 'cursor-default transition hover:brightness-110' : ''} ${className}`}
       >
         {children}
       </motion.section>
