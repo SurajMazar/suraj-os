@@ -1,0 +1,395 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+  --color-accent: #0a84ff;
+}
+
+:root {
+  --font-mono: 'SF Mono', 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+  /* macOS system colors (light). */
+  --accent: #007aff;
+  --accent-soft: rgba(0, 122, 255, 0.16);
+  --sys-red: #ff3b30;
+  --sys-green: #28cd41;
+  --sys-orange: #ff9500;
+  --text: rgba(0, 0, 0, 0.85);
+  --text-2: rgba(0, 0, 0, 0.62);
+  --text-3: rgba(0, 0, 0, 0.45);
+  /* selectedContentBackgroundColor: active sidebar rows and list selection. */
+  --selection: #0064e1;
+  --selection-inactive: rgba(0, 0, 0, 0.1);
+  /* Content (controlBackgroundColor), window chrome and grouped fills. */
+  --surface: rgba(255, 255, 255, 0.92);
+  --surface-solid: #ffffff;
+  --surface-2: #f6f6f6;
+  --surface-3: rgba(0, 0, 0, 0.04);
+  --hover: rgba(0, 0, 0, 0.08);
+  --border: rgba(0, 0, 0, 0.1);
+  --border-strong: rgba(0, 0, 0, 0.18);
+  /* Vibrant materials: sidebar, window toolbar, menus, popovers. */
+  --glass: rgba(236, 236, 236, 0.7);
+  --glass-strong: rgba(246, 246, 246, 0.9);
+  --menubar-bg: rgba(255, 255, 255, 0.32);
+  --menubar-text: rgba(0, 0, 0, 0.85);
+  --traffic-off: #dcdcdc;
+  --window-shadow: 0 22px 70px 4px rgba(0, 0, 0, 0.32), 0 0 0 0.5px rgba(0, 0, 0, 0.24);
+  --window-shadow-inactive: 0 12px 34px rgba(0, 0, 0, 0.18), 0 0 0 0.5px rgba(0, 0, 0, 0.18);
+  --menu-shadow: 0 10px 34px rgba(0, 0, 0, 0.22), 0 0 0 0.5px rgba(0, 0, 0, 0.22);
+  /* Liquid Glass: window bodies and the specular rim. */
+  --win-bg: rgba(255, 255, 255, 0.74);
+  --rim-a: rgba(255, 255, 255, 0.85);
+  --rim-b: rgba(255, 255, 255, 0.12);
+  --rim-c: rgba(255, 255, 255, 0.45);
+  color-scheme: light;
+}
+
+.dark {
+  /* macOS system colors (dark). */
+  --accent: #0a84ff;
+  --accent-soft: rgba(10, 132, 255, 0.26);
+  --sys-red: #ff453a;
+  --sys-green: #32d74b;
+  --sys-orange: #ff9f0a;
+  --text: rgba(255, 255, 255, 0.85);
+  --text-2: rgba(255, 255, 255, 0.64);
+  --text-3: rgba(255, 255, 255, 0.42);
+  --selection: #0058d0;
+  --selection-inactive: rgba(255, 255, 255, 0.12);
+  --surface: rgba(30, 30, 30, 0.92);
+  --surface-solid: #1e1e1e;
+  --surface-2: #2a2a2a;
+  --surface-3: rgba(255, 255, 255, 0.05);
+  --hover: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --glass: rgba(40, 40, 40, 0.62);
+  --glass-strong: rgba(40, 40, 42, 0.9);
+  --menubar-bg: rgba(0, 0, 0, 0.3);
+  --menubar-text: rgba(255, 255, 255, 0.92);
+  --traffic-off: #4a4a4c;
+  --window-shadow: 0 22px 70px 4px rgba(0, 0, 0, 0.56), 0 0 0 0.5px rgba(0, 0, 0, 0.9), inset 0 0 0 0.5px rgba(255, 255, 255, 0.18);
+  --window-shadow-inactive: 0 12px 34px rgba(0, 0, 0, 0.42), 0 0 0 0.5px rgba(0, 0, 0, 0.8), inset 0 0 0 0.5px rgba(255, 255, 255, 0.12);
+  --menu-shadow: 0 10px 34px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(0, 0, 0, 0.8), inset 0 0 0 0.5px rgba(255, 255, 255, 0.16);
+  --win-bg: rgba(30, 30, 33, 0.72);
+  --rim-a: rgba(255, 255, 255, 0.34);
+  --rim-b: rgba(255, 255, 255, 0.04);
+  --rim-c: rgba(255, 255, 255, 0.16);
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  height: 100dvh;
+  margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: #0b1020;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+input,
+textarea,
+[contenteditable],
+.selectable {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+@layer base {
+  /* In the base layer so Tailwind size and color utilities on buttons still win. */
+  button {
+    cursor: default;
+    font: inherit;
+    color: inherit;
+  }
+}
+
+/* Keyboard focus ring, macOS-style: soft accent halo on controls only. */
+:focus-visible {
+  outline: none;
+}
+button:focus-visible,
+a:focus-visible,
+[role='option']:focus-visible,
+[role='switch']:focus-visible,
+[role='tab']:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: 1px;
+}
+/* Text fields draw their own focus treatment; window frames and scroll areas take focus silently. */
+input:focus-visible,
+textarea:focus-visible,
+[tabindex='-1']:focus-visible,
+[data-window-id]:focus-visible {
+  outline: none;
+}
+
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(50px) saturate(190%);
+  -webkit-backdrop-filter: blur(50px) saturate(190%);
+}
+
+.glass-strong {
+  background: var(--glass-strong);
+  backdrop-filter: blur(50px) saturate(190%);
+  -webkit-backdrop-filter: blur(50px) saturate(190%);
+}
+
+.menu-surface {
+  background: var(--glass-strong);
+  backdrop-filter: blur(36px) saturate(190%);
+  -webkit-backdrop-filter: blur(36px) saturate(190%);
+  box-shadow: var(--menu-shadow);
+  border-radius: 10px;
+}
+
+/* Thin, overlay-style scrollbars. */
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+.scroll-thin::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 10px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+.app-icon {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), 0 4px 10px rgba(0, 0, 0, 0.18);
+}
+
+.traffic {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.18);
+}
+.traffic svg {
+  opacity: 0;
+}
+.traffic-group:hover .traffic svg {
+  opacity: 0.75;
+}
+
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.caret-blink {
+  animation: caret-blink 1.05s step-end infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, -3%, 0) scale(1.06);
+  }
+}
+
+@keyframes radar {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Long-form text inside apps. */
+.prose-os p {
+  line-height: 1.6;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+}
+
+[data-drag-region] {
+  touch-action: none;
+}
+
+.os-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 0 0 0.5px rgba(0, 0, 0, 0.2);
+}
+.os-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+/* Phones: apps fill the screen, so window-chrome spacing goes away. */
+.mobile-app [data-drag-region] {
+  touch-action: auto;
+  padding-left: 12px !important;
+}
+.mobile-app aside.glass + section [data-drag-region] {
+  height: auto;
+  min-height: 44px;
+  flex-wrap: wrap;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+/* iPhone zooms into inputs under 16px; keep touch inputs at 16px. */
+@media (pointer: coarse) {
+  input:not([type='range']):not([type='color']),
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Primary glass (menu bar, Dock, Spotlight): a fine top-edge highlight. */
+.glass-edge {
+  box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.45), inset 0 0 0 0.5px rgba(255, 255, 255, 0.18);
+}
+
+/*
+ * Liquid Glass rim: a 1px gradient border that catches light at the top-left
+ * and bottom-right, drawn with a mask so it follows any border radius.
+ */
+@layer components {
+.liquid,
+.menu-surface {
+  position: relative;
+  isolation: isolate;
+}
+.liquid::before,
+.menu-surface::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(140deg, var(--rim-a), var(--rim-b) 28%, transparent 50%, var(--rim-b) 72%, var(--rim-c));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 60;
+}
+}
+
+
+/* Glass belongs to the desktop (widgets, Dock, menus). Inside apps, surfaces are solid for readability. */
+[data-window-id] .glass,
+[data-window-id] .glass-strong,
+.mobile-app .glass,
+.mobile-app .glass-strong {
+  background: var(--surface-2);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Like macOS, selection turns gray when its window is not in front. */
+[data-window-id]:not([data-focused]) .bg-\[var\(--selection\)\] {
+  background: var(--selection-inactive);
+  color: var(--text);
+}
+
+/* Control Center capsules: clear, bright-rimmed Liquid Glass. */
+:root {
+  --cc-glass: rgba(255, 255, 255, 0.42);
+  --cc-disc: rgba(0, 0, 0, 0.08);
+  --cc-text: rgba(0, 0, 0, 0.86);
+  --cc-sub: rgba(0, 0, 0, 0.55);
+  --cc-fill: #ffffff;
+  --cc-track: rgba(0, 0, 0, 0.14);
+}
+.dark {
+  --cc-glass: rgba(40, 40, 46, 0.42);
+  --cc-disc: rgba(255, 255, 255, 0.14);
+  --cc-text: rgba(255, 255, 255, 0.95);
+  --cc-sub: rgba(255, 255, 255, 0.62);
+  --cc-fill: #ffffff;
+  --cc-track: rgba(255, 255, 255, 0.22);
+}
+.cc-glass {
+  background: var(--cc-glass);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.cc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: transparent;
+}
+.cc-slider::-moz-range-thumb {
+  width: 6px;
+  height: 6px;
+  border: 0;
+  background: transparent;
+}
