@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, ArrowUp, Pause, Play } from 'lucide-react'
 import { sounds } from '@/lib/sound'
+import { discover } from '@/lib/easterEggs'
 import { useIsDark, useIsTouch } from '@/hooks/system'
 import { IconButton } from '@/components/shared/ui'
 import { GameOverlay, Kbd, Stat, StatBar } from '../GameUI'
@@ -546,6 +547,7 @@ export default function ShipIt({ windowId }: { windowId: string }) {
       const newBest = useScores.getState().record('shipit', w.score)
       setResult({ score: w.score, newBest, time: seconds })
       setStatus('won')
+      discover('shipped')
       sounds.sent()
     }
   }, [hurt])

@@ -7,6 +7,10 @@ import { getSettings } from '@/store/settingsStore'
 import { notificationsSeed } from '@/portfolio.config'
 import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
 import { useUserWallpaper } from '@/lib/userWallpaper'
+import { Effects } from '@/components/desktop/Effects'
+import { consoleGreeting } from '@/lib/easterEggs'
+import { startEggWatchers } from '@/lib/eggWatchers'
+
 
 const MobileShell = lazy(() => import('@/components/mobile/MobileShell'))
 
@@ -22,7 +26,11 @@ export default function App() {
 
   useEffect(() => {
     void useUserWallpaper.getState().load()
+    consoleGreeting()
   }, [])
+
+  // Easter eggs that come from how the OS is used: key sequences, restarts, windows, the time of a visit.
+  useEffect(() => startEggWatchers(), [])
 
   useEffect(() => {
     if (getSettings().startupOnLoad) useDesktop.getState().setSystem('booting', 'load')
@@ -68,6 +76,7 @@ export default function App() {
       ) : (
         <Desktop />
       )}
+      <Effects />
       </ErrorBoundary>
     </MotionConfig>
   )

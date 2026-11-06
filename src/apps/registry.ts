@@ -189,6 +189,17 @@ export const apps: Record<AppId, AppDefinition> = {
     keywords: ['games', 'play', 'platformer', 'blocks', 'snake', 'bug hunt', 'memory', 'typing', 'fun'],
     description: 'Six small games built for SurajOS.',
   },
+  player: {
+    id: 'player',
+    name: 'Video',
+    component: lazy(() => import('./Player/Player')),
+    size: { w: 720, h: 450 },
+    minSize: { w: 360, h: 240 },
+    inDock: false,
+    inLaunchpad: false,
+    keywords: ['video', 'movie', 'mp4'],
+    description: 'Plays videos.',
+  },
   aboutmac: {
     id: 'aboutmac',
     name: 'About This Mac',

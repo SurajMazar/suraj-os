@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Bug, Flag, Pickaxe, RotateCcw } from 'lucide-react'
 import { sounds } from '@/lib/sound'
+import { discover } from '@/lib/easterEggs'
 import { useIsTouch } from '@/hooks/system'
 import { IconButton, Segmented } from '@/components/shared/ui'
 import { GameOverlay, Stat, StatBar } from '../GameUI'
@@ -122,6 +123,7 @@ export default function BugHunt({ windowId }: { windowId: string }) {
       setCells(next.map((c) => (c.bug ? { ...c, flag: true } : c)))
       setNewBest(useScores.getState().record(`bugs-${level}`, time, true))
       setStatus('won')
+      discover('exterminator')
       sounds.sent()
     } else {
       setCells(next.map((c) => (c.bug ? { ...c, open: true } : c)))

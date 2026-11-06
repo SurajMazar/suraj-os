@@ -6,6 +6,8 @@ import { useDesktop } from '@/store/desktopStore'
 import { AppIcon } from '@/components/shared/AppIcon'
 import { FileIcon } from '@/components/shared/FileIcon'
 import { fs } from '@/data/fs'
+import { askew, barrelRoll, discover } from '@/lib/easterEggs'
+import { openApp } from '@/store/windowStore'
 import type { AppId } from '@/types'
 
 const suggestions: AppId[] = ['projects', 'about', 'experience', 'resume', 'terminal', 'contact']
@@ -32,6 +34,26 @@ function ResultIcon({ item, size = 22 }: { item: SearchItem; size?: number }) {
 
 export function Spotlight() {
   const [q, setQ] = useState('')
+  // Easter eggs: a few phrases make Spotlight do something instead of searching.
+  const [eggLine, setEggLine] = useState<string | null>(null)
+  useEffect(() => {
+    const t = q.trim().toLowerCase().replace(/[?!.]+$/, '')
+    setEggLine(null)
+    if (/^(do an? )?barrel roll$/.test(t)) {
+      barrelRoll()
+      discover('barrel')
+    } else if (t === 'askew' || t === 'tilt') {
+      askew()
+      discover('askew')
+    } else if (t === 'recursion') {
+      setEggLine('Did you mean: recursion?')
+      discover('recursion')
+    } else if (/^who('s| is) the best (developer|engineer)$/.test(t)) {
+      setEggLine('Searching… found one. Opening About Me.')
+      discover('best')
+      setTimeout(() => openApp('about'), 900)
+    }
+  }, [q])
   const [active, setActive] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
@@ -108,6 +130,11 @@ export function Spotlight() {
             }}
           />
         </div>
+        {eggLine ? (
+          <button type="button" className="block w-full border-t border-[var(--border)] px-4 py-2 text-left text-[13px] text-[var(--accent)]" onClick={() => setQ(eggLine.startsWith('Did you mean') ? 'recursion' : q)}>
+            {eggLine}
+          </button>
+        ) : null}
         {flat.length > 0 && (
           <div className="flex h-[min(380px,50vh)] border-t border-[var(--border)]">
             <div ref={listRef} id="spotlight-results" role="listbox" className="scroll-thin w-full overflow-y-auto p-1.5 sm:w-[46%] sm:border-r sm:border-[var(--border)]">

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowDown, ArrowLeft, ArrowRight, ChevronsDown, Pause, Play, RotateCw } from 'lucide-react'
 import { sounds } from '@/lib/sound'
+import { discover } from '@/lib/easterEggs'
 import { useIsTouch } from '@/hooks/system'
 import { IconButton } from '@/components/shared/ui'
 import { GameOverlay, Kbd, Stat, StatBar } from '../GameUI'
@@ -135,7 +136,10 @@ export default function BlockDrop({ windowId }: { windowId: string }) {
     if (full.length) {
       setFlash(full)
       setTimeout(() => setFlash([]), 180)
-      if (full.length === 4) sounds.sent()
+      if (full.length === 4) {
+        sounds.sent()
+        discover('tetra')
+      }
       else sounds.pop()
     } else sounds.click()
     const n = nextPiece(q)

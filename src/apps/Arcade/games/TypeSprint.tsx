@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { RotateCcw } from 'lucide-react'
 import { sounds } from '@/lib/sound'
+import { discover } from '@/lib/easterEggs'
 import { skillGroups } from '@/portfolio.config'
 import { IconButton, Segmented } from '@/components/shared/ui'
 import { GameOverlay, Kbd, Stat, StatBar } from '../GameUI'
@@ -75,6 +76,7 @@ export default function TypeSprint() {
   useEffect(() => {
     if (status !== 'done') return
     const finalWpm = Math.round(correctChars / 5 / (length / 60))
+    if (finalWpm >= 60) discover('fingers')
     setNewBest(finalWpm > 0 && useScores.getState().record(`type-${length}`, finalWpm))
     sounds.sent()
     input.current?.blur()

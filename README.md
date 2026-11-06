@@ -10,6 +10,7 @@ Open apps from the Dock, drag and snap windows, minimize them into the Dock, sea
 - **Apps**: Finder, About Me, Projects, Experience, Skills, Resume (a PDF viewer built on pdf.js), Terminal, Safari, Contact, System Settings, Trash.
 - **Arcade**: six original games with best scores kept in the browser: Ship It (a platformer where a developer runs to the launch pad, collecting commits and stomping bugs), Block Drop (falling blocks), Byte Snake, Bug Hunt (a logic puzzle), Stack Match (memory pairs of the CV's skills) and Type Sprint (typing speed with words from the stack). Keyboard and touch controls; a game pauses when its window loses focus.
 - **System**: menu bar with working menus, Spotlight, Launchpad, Mission Control and App Exposé, Control Center, Notification Center, Quick Look, an app switcher, context menus, lock, sleep, restart and shut down.
+- **Easter eggs**: 62 hidden secrets across Terminal, Spotlight, the Trash, the Arcade, the desktop and the menus, with a found counter. Type `eggs` in Terminal for hints, or `please` for a free one.
 - **Three layouts**: desktop, tablet (windows open nearly full width, the Dock shrinks to fit) and iPhone (home screen, apps that zoom out of their icon, a swipe-up home bar, drill-down lists, Back returns home).
 - **Sound**: original system sounds synthesized with the Web Audio API, previewable in Settings.
 - **Live data**: the GitHub widget and the Safari GitHub page read the public GitHub API.

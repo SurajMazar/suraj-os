@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Pause, Play } from 'lucide-react'
 import { sounds } from '@/lib/sound'
+import { discover } from '@/lib/easterEggs'
 import { useIsTouch } from '@/hooks/system'
 import { IconButton } from '@/components/shared/ui'
 import { GameOverlay, Kbd, Stat, StatBar } from '../GameUI'
@@ -222,6 +223,7 @@ export default function ByteSnake({ windowId }: { windowId: string }) {
       } else if (--w.bonus.ttl <= 0) w.bonus = null
     }
     setScore(w.points)
+    if (w.points >= 30) discover('longsnake')
     draw()
   }, [draw, finish])
 

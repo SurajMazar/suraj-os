@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { RotateCcw } from 'lucide-react'
 import { sounds } from '@/lib/sound'
+import { discover } from '@/lib/easterEggs'
 import { portfolio, skillGroups, skillNotes } from '@/portfolio.config'
 import { IconButton } from '@/components/shared/ui'
 import { GameOverlay, Stat, StatBar } from '../GameUI'
@@ -100,6 +101,7 @@ export default function StackMatch({ windowId }: { windowId: string }) {
       if (next.size === PAIRS) {
         setElapsed(Math.floor((Date.now() - (started ?? Date.now())) / 1000))
         setNewBest(useScores.getState().record('match', moves, true))
+        if (moves <= 12) discover('memory')
         sounds.sent()
       } else sounds.pop()
       return

@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react'
 import {
   BriefcaseBusiness,
+  Clapperboard,
   Compass,
   FileText,
   FolderOpen,
@@ -87,6 +88,8 @@ function specFor(appId: AppId, size: number): IconSpec {
     }
     case 'arcade':
       return { bg: g('#fb7185', '#7c3aed'), glyph: <Gamepad2 size={s} strokeWidth={stroke} /> }
+    case 'player':
+      return { bg: g('#3f3f46', '#09090b'), glyph: <Clapperboard size={s} strokeWidth={stroke} /> }
     case 'aboutmac':
       return { bg: g('#93c5fd', '#1e3a8a'), glyph: <Monitor size={s} strokeWidth={stroke} /> }
   }

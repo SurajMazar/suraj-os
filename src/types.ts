@@ -18,6 +18,7 @@ export type AppId =
   | 'aboutmac'
   | 'calendar'
   | 'arcade'
+  | 'player'
 
 export interface Rect {
   x: number

@@ -7,6 +7,52 @@ import { useSettings, type WallpaperId } from '@/store/settingsStore'
 import { useDesktop } from '@/store/desktopStore'
 import { apps } from '@/apps/registry'
 import type { AppId } from '@/types'
+import { disco, discover, eggs, playEffect, shake, upsideDown, useEggs } from '@/lib/easterEggs'
+
+const pick = <T,>(list: readonly T[]) => list[Math.floor(Math.random() * list.length)]
+
+const fortunes = [
+  'Today’s forecast: a 90% chance of a merge conflict before lunch.',
+  'The bug you are hunting is in the file you are sure it isn’t in.',
+  'Your next deploy will go smoothly. The one after that, we don’t talk about.',
+  'A TODO left today is a legacy system tomorrow.',
+  'You will write a clever regex. Future you will not understand it.',
+  'Good things come to those who read the whole error message.',
+  'Lucky number: 200. Unlucky number: 500.',
+  'The test you skipped today is the incident you write up on Friday.',
+]
+
+const eightBall = ['Ship it.', 'Needs more tests.', 'Ask again after stand-up.', 'It works on my machine, so yes.', 'The logs say no.', 'Signs point to a hotfix.', 'Definitely. Next sprint.', 'Unclear. Clear the cache and ask again.']
+
+const trainArt = String.raw`
+      ____
+  ___|[]__|____     ___________   ___________
+ |  _   _   _  |___|  _  _  _  |_|  _  _  _  |
+ |_(o)_(o)_(o)_|   |_(o)__(o)__|_|_(o)__(o)__|`
+
+const everestArt = String.raw`
+            /\
+           /**\
+          /    \    /\
+     /\  /      \  /  \
+    /  \/   /\   \/    \
+   /    \  /  \   \     \
+`
+
+/** Years, months and days since the first role on the CV. */
+function careerUptime() {
+  const start = Math.min(...experience.map((e) => new Date(`1 ${e.start}`).getTime()).filter((t) => !Number.isNaN(t)))
+  const days = Math.floor((Date.now() - start) / 86400000)
+  return `up ${Math.floor(days / 365)} years, ${Math.floor((days % 365) / 30)} months, ${days % 30} days, load average: coffee, tea, momo`
+}
+
+const coffeeArt = String.raw`
+      ( (
+       ) )
+    ........
+    |      |]
+    \      /
+     '----'`
 
 export interface Ctx {
   cwd: string
@@ -385,8 +431,15 @@ export const commands: Record<string, { desc: string; run: Run; hidden?: boolean
     desc: 'Run as superuser',
     hidden: true,
     run: (args) => {
-      if (args.join(' ') === 'hire-me' || args.join(' ') === 'hire suraj') {
+      const line = args.join(' ')
+      if (line === 'make sandwich' || line === 'make me a sandwich') {
+        discover('sandwich')
+        return <span className={C.green}>[sudo] Fine. One sandwich, coming up 🥪</span>
+      }
+      if (args[0] === 'rm') return commands.rm.run(args.slice(1), { cwd: '', setCwd: () => {}, clear: () => {}, exit: () => {}, history: [] })
+      if (line === 'hire-me' || line === 'hire suraj' || line === `hire ${portfolio.firstName.toLowerCase()}`) {
         openApp('contact')
+        discover('hire')
         useDesktop.getState().pushNotification({ id: 'sudo', app: 'contact', title: 'Permission granted', body: 'Opening Contact. Suraj is open to remote roles.' })
         return <span className={C.green}>[sudo] access granted. Opening Contact…</span>
       }
@@ -401,6 +454,7 @@ export const commands: Record<string, { desc: string; run: Run; hidden?: boolean
     desc: 'Secret',
     hidden: true,
     run: () => (
+      discover('momo'),
       <div>
         <pre className={`${C.yellow} leading-[1.2]`}>{momoArt}</pre>
         <div className="text-white/80">You found the secret command. Kathmandu runs on momo: steamed, fried or jhol, with achar on the side.</div>
@@ -408,10 +462,192 @@ export const commands: Record<string, { desc: string; run: Run; hidden?: boolean
       </div>
     ),
   },
-  hello: { desc: 'Say hi', hidden: true, run: () => `Hello! Namaste 🙏 Type \`help\` to look around.` },
+  hello: {
+    desc: 'Say hi',
+    hidden: true,
+    run: (args) => {
+      if (args[0]?.toLowerCase().replace(/[^a-z]/g, '') === 'world') {
+        discover('helloworld')
+        return (
+          <div>
+            <div className={C.green}>Hello, World!</div>
+            <div className={C.dim}>Every programmer’s first program. Everything since has been a longer version of it.</div>
+          </div>
+        )
+      }
+      return `Hello! Namaste 🙏 Type \`help\` to look around.`
+    },
+  },
   hi: { desc: 'Say hi', hidden: true, run: () => `Hi there! Namaste 🙏 Type \`help\` to look around.` },
-  rm: { desc: 'Remove files', hidden: true, run: () => <span className={C.yellow}>rm: this portfolio is read-only. Nothing was harmed.</span> },
-  vim: { desc: 'Editor', hidden: true, run: () => <span className={C.dim}>You are now trapped in vim. Just kidding — type `exit` if you ever feel stuck.</span> },
+  rm: {
+    desc: 'Remove files',
+    hidden: true,
+    run: (args) => {
+      // Everyone tries it eventually.
+      if (args.some((a) => /^-[a-z]*r[a-z]*f|^-[a-z]*f[a-z]*r/i.test(a)) && args.some((a) => a === '/' || a === '/*' || a === '~')) {
+        setTimeout(() => {
+          playEffect('panic')
+          discover('panic')
+        }, 600)
+        return <span className={C.red}>Deleting everything…</span>
+      }
+      return <span className={C.yellow}>rm: this portfolio is read-only. Nothing was harmed.</span>
+    },
+  },
+  matrix: {
+    desc: 'Green rain',
+    hidden: true,
+    run: () => {
+      playEffect('matrix')
+      discover('matrix')
+      return <span className={C.green}>Entering the code rain… click or press Escape to come back.</span>
+    },
+  },
+  coffee: {
+    desc: 'Brew coffee',
+    hidden: true,
+    run: () => (
+      discover('coffee'),
+      <div>
+        <pre className={`${C.yellow} leading-[1.2]`}>{coffeeArt}</pre>
+        <div className="text-white/80">Brewing… done. Productivity +20%, patience +5%.</div>
+        <div className={C.dim}>Refills are free. Type `coffee` again whenever you need one.</div>
+      </div>
+    ),
+  },
+  eggs: {
+    desc: 'Easter egg hints',
+    run: () => {
+      const found = useEggs.getState().found as string[]
+      return (
+        <div>
+          <div className={C.bold}>
+            Easter eggs: {found.length} of {eggs.length} found
+          </div>
+          {eggs.map((e) => (
+            <div key={e.id}>
+              {found.includes(e.id) ? <span className={C.green}>✓ {e.title}</span> : <span className={C.dim}>? {e.hint}</span>}
+            </div>
+          ))}
+        </div>
+      )
+    },
+  },
+  vim: { desc: 'Editor', hidden: true, run: () => <span className={C.dim}>You are now in vim. Many enter; few leave. (Hint: there is a way out.)</span> },
+  ':q': { desc: 'Quit vim', hidden: true, run: () => (discover('vim'), <span className={C.green}>You escaped vim. Few can say the same.</span>) },
+  ':wq': { desc: 'Quit vim', hidden: true, run: () => (discover('vim'), <span className={C.green}>Saved and escaped vim. Textbook.</span>) },
+  ':q!': { desc: 'Quit vim', hidden: true, run: () => (discover('vim'), <span className={C.green}>Escaped vim without saving. Bold.</span>) },
+  tea: { desc: 'Make tea', hidden: true, run: () => (discover('tea'), <span>☕ Chiya’s ready: milk, sugar, a little ginger, served in a small glass. <span className={C.dim}>The other national drink of software.</span></span>) },
+  chiya: { desc: 'Make tea', hidden: true, run: () => (discover('tea'), <span>☕ Chiya’s ready: milk, sugar, a little ginger, served in a small glass.</span>) },
+  ping: { desc: 'Ping', hidden: true, run: () => (discover('ping'), <div><div>PING surajos.local: 64 bytes, time=0.042 ms</div><div className={C.green}>pong 🏓</div></div>) },
+  fortune: { desc: 'Fortune', hidden: true, run: () => (discover('fortune'), <span className={C.magenta}>{pick(fortunes)}</span>) },
+  flip: { desc: 'Flip a coin', hidden: true, run: () => (discover('flip'), <span>🪙 {Math.random() < 0.5 ? 'Heads' : 'Tails'}.</span>) },
+  roll: { desc: 'Roll a die', hidden: true, run: () => { discover('roll'); const n = Math.floor(Math.random() * 6); return <span><span className="text-[22px] leading-none">{'⚀⚁⚂⚃⚄⚅'[n]}</span> You rolled a {n + 1}.</span> } },
+  '8ball': {
+    desc: 'Magic 8ball',
+    hidden: true,
+    run: (args) => {
+      if (!args.length) return <span className={C.dim}>Ask it something: 8ball will this deploy work?</span>
+      discover('eightball')
+      return <span>🎱 <span className={C.cyan}>{pick(eightBall)}</span></span>
+    },
+  },
+  weather: { desc: 'Weather', hidden: true, run: () => (discover('weather'), <span>⛅ {portfolio.location.split(',')[0]}: clear skies over the code, 100% chance of shipping.</span>) },
+  uptime: { desc: 'Uptime', hidden: true, run: () => (discover('uptime'), careerUptime()) },
+  git: {
+    desc: 'Git',
+    hidden: true,
+    run: (args) => {
+      const line = args.join(' ')
+      if (args[0] === 'blame') {
+        discover('blame')
+        return <span>git blame: every line was written by… <span className={C.yellow}>you</span>. It’s always you.</span>
+      }
+      if (args[0] === 'push' && args.some((a) => a === '-f' || a === '--force')) {
+        discover('force')
+        shake()
+        return <span className={C.red}>Whoa. Not on main. Try --force-with-lease, and tell the team first.</span>
+      }
+      if (args[0] === 'status') return <span className={C.dim}>On branch main. Nothing to commit, working tree clean. Unlike most days.</span>
+      return <span className={C.dim}>git {line}: this repo lives on GitHub. Try `github`, or `git blame`.</span>
+    },
+  },
+  make: {
+    desc: 'Make',
+    hidden: true,
+    run: (args) => (args.join(' ').includes('sandwich') ? <span className={C.red}>make: *** No rule to make target 'sandwich'. Make it yourself. (Unless you are root.)</span> : <span className={C.dim}>make: nothing to be done.</span>),
+  },
+  npm: {
+    desc: 'npm',
+    hidden: true,
+    run: (args) => {
+      if (args[0] !== 'install' && args[0] !== 'i') return <span className={C.dim}>npm: try `npm install`. If you dare.</span>
+      discover('npm')
+      return (
+        <div>
+          <div className={C.dim}>⠋ resolving dependencies… fetching the internet…</div>
+          <div>added 1,384 packages in 42s</div>
+          <div className={C.yellow}>312 packages are looking for funding. 3 of them are actually used.</div>
+        </div>
+      )
+    },
+  },
+  docker: { desc: 'Docker', hidden: true, run: () => (discover('docker'), <span>🐳 It works in my container, so it works everywhere. Probably.</span>) },
+  python: { desc: 'Python', hidden: true, run: () => (discover('python'), <div><div className={C.dim}>Python 3 on SurajOS</div><div>&gt;&gt;&gt; print("hiss")</div><div>hiss 🐍</div></div>) },
+  python3: { desc: 'Python', hidden: true, run: () => (discover('python'), <div><div>&gt;&gt;&gt; print("hiss")</div><div>hiss 🐍</div></div>) },
+  namaste: { desc: 'Namaste', hidden: true, run: () => (discover('namaste'), <span>🙏 Namaste! Tapailai kasto chha? <span className={C.dim}>(How are you?)</span></span>) },
+  dalbhat: { desc: 'Dal bhat', hidden: true, run: () => (discover('dalbhat'), <span>🍛 Dal bhat power, 24 hour. <span className={C.dim}>Lentils, rice, curry and pickle, twice a day, refills included.</span></span>) },
+  everest: {
+    desc: 'Everest',
+    hidden: true,
+    run: () => (
+      discover('everest'),
+      <div>
+        <pre className="leading-[1.2] text-white">{everestArt}</pre>
+        <div>Sagarmatha · 8,849 m above sea level. <span className={C.dim}>Base camp is a long walk from here.</span></div>
+      </div>
+    ),
+  },
+  hack: {
+    desc: 'Hack',
+    hidden: true,
+    run: () => (
+      discover('hack'),
+      <div className={C.green}>
+        <div>Bypassing the firewall… done</div>
+        <div>Decrypting the mainframe… done</div>
+        <div>Downloading more RAM… done</div>
+        <div className="text-white">Access granted. You are looking at a portfolio. That’s all there is. 😄</div>
+      </div>
+    ),
+  },
+  sl: { desc: 'Train', hidden: true, run: () => (discover('train'), <div><pre className={`${C.cyan} leading-[1.15]`}>{trainArt}</pre><div className={C.dim}>Choo choo. You meant `ls`.</div></div>) },
+  xyzzy: { desc: 'Magic word', hidden: true, run: () => (discover('xyzzy'), <span>Nothing happens. <span className={C.dim}>(A magic word from Colossal Cave Adventure, 1976.)</span></span>) },
+  please: {
+    desc: 'Manners',
+    hidden: true,
+    run: () => {
+      discover('please')
+      const left = eggs.filter((e) => !(useEggs.getState().found as string[]).includes(e.id))
+      return left.length ? <span>Since you asked nicely, a hint: <span className={C.cyan}>{pick(left).hint}</span></span> : <span className={C.green}>You have found everything. Thank you for being so polite.</span>
+    },
+  },
+  selfdestruct: {
+    desc: 'Self-destruct',
+    hidden: true,
+    run: () => {
+      discover('selfdestruct')
+      setTimeout(() => {
+        shake()
+        playEffect('confetti')
+      }, 2500)
+      return <span className={C.red}>Self-destruct in 3… 2… 1…</span>
+    },
+  },
+  party: { desc: 'Party', hidden: true, run: () => (discover('party'), playEffect('confetti'), <span>🎉 Party!</span>) },
+  snow: { desc: 'Snow', hidden: true, run: () => (discover('snow'), playEffect('snow'), <span>❄️ Let it snow. Click or press Escape to stop.</span>) },
+  disco: { desc: 'Disco', hidden: true, run: () => (discover('disco'), disco(), <span className={C.magenta}>🪩 Disco mode on.</span>) },
+  'upside-down': { desc: 'Flip the screen', hidden: true, run: () => (discover('upsidedown'), upsideDown(), <span>🙃 Hold on to something.</span>) },
 }
 
 export const commandNames = Object.keys(commands)
