@@ -41,6 +41,7 @@ function Page({ doc, n, scale }: { doc: PDFDocumentProxy; n: number; scale: numb
     <canvas
       ref={ref}
       data-page={n}
+      role="img"
       aria-label={`Resume page ${n}`}
       className="mx-auto block bg-white shadow-[0_4px_24px_rgba(0,0,0,.25)]"
       style={size ? { width: size.w, height: size.h } : { width: 612 * scale, height: 792 * scale }}
