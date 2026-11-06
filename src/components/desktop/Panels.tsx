@@ -18,7 +18,7 @@ function Capsule({ children, className = '', round = false }: { children: React.
 /** A pill toggle: a disc that turns white with a blue glyph when on. */
 function PillToggle({ on, label, sub, icon, onClick }: { on: boolean; label: string; sub: string; icon: React.ReactNode; onClick: () => void }) {
   return (
-    <Capsule round className="h-[62px]">
+    <Capsule round className="h-[64px]">
       <button type="button" role="switch" aria-checked={on} aria-label={label} onClick={onClick} className="flex h-full w-full min-w-0 items-center gap-2.5 rounded-full pl-[9px] pr-3 text-left active:scale-[.98]">
         <span className={`grid h-[44px] w-[44px] shrink-0 place-items-center rounded-full transition-colors ${on ? 'bg-white text-[#0a84ff]' : 'bg-[var(--cc-disc)] text-[var(--cc-text)]'}`}>{icon}</span>
         <span className="min-w-0 flex-1">
@@ -39,7 +39,7 @@ function RoundButton({ on = false, label, icon, onClick }: { on?: boolean; label
       title={label}
       aria-pressed={on}
       onClick={onClick}
-      className={`liquid grid h-[62px] w-[62px] place-items-center rounded-full transition-colors active:scale-95 ${on ? 'bg-white text-black shadow-[0_6px_20px_rgba(0,0,0,.25)]' : 'cc-glass text-[var(--cc-text)]'}`}
+      className={`liquid grid aspect-square w-full place-items-center rounded-full transition-colors active:scale-95 ${on ? 'bg-white text-black shadow-[0_6px_20px_rgba(0,0,0,.25)]' : 'cc-glass text-[var(--cc-text)]'}`}
     >
       {icon}
     </button>
@@ -76,7 +76,7 @@ function NowPlaying() {
   const item = soundCatalog[i]
   const step = (d: number) => setI((x) => (x + d + soundCatalog.length) % soundCatalog.length)
   return (
-    <Capsule className="flex h-[134px] flex-col justify-between p-3.5">
+    <Capsule className="flex h-[138px] flex-col justify-between p-3.5">
       <div className="grid h-[38px] w-[38px] place-items-center rounded-[10px] bg-[var(--cc-disc)] text-[var(--cc-text)]">
         <Music size={18} />
       </div>
@@ -108,28 +108,31 @@ export function ControlCenter() {
       data-panel
       role="dialog"
       aria-label="Control Center"
-      initial={{ opacity: 0, y: -10, scale: 0.97 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -8, scale: 0.98, transition: { duration: 0.12 } }}
+      // No opacity on this container: a fading parent switches off its children's blur.
+      initial={{ y: -10, scale: 0.97 }}
+      animate={{ y: 0, scale: 1 }}
+      exit={{ y: -8, scale: 0.98, visibility: 'hidden', transition: { duration: 0.12 } }}
       transition={{ type: 'spring', stiffness: 460, damping: 34 }}
-      className="absolute right-2 top-[34px] z-[30] w-[316px] origin-top-right"
+      className="glass-enter absolute right-2 top-[34px] z-[30] w-[290px] origin-top-right"
     >
-      <div className="grid grid-cols-[1fr_134px] gap-2.5">
+      {/* A faint blurred backing, so the desktop stays soft in the gaps between capsules. */}
+      <div aria-hidden className="pointer-events-none absolute -inset-2 -z-10 rounded-[38px] bg-black/10" style={{ backdropFilter: 'blur(14px)', WebkitBackdropFilter: 'blur(14px)' }} />
+      <div className="grid grid-cols-2 gap-2.5">
         <div className="grid gap-2.5">
           <PillToggle on={s.wifi} label="Wi-Fi" sub={s.wifi ? 'SurajOS' : 'Off'} icon={<Wifi size={20} strokeWidth={2.4} />} onClick={() => s.set('wifi', !s.wifi)} />
           <PillToggle on={s.bluetooth} label="Bluetooth" sub={s.bluetooth ? 'On' : 'Off'} icon={<Bluetooth size={20} strokeWidth={2.4} />} onClick={() => s.set('bluetooth', !s.bluetooth)} />
         </div>
         <NowPlaying />
         <PillToggle on={s.airdrop} label="AirDrop" sub={s.airdrop ? 'Everyone' : 'Off'} icon={<Radio size={20} strokeWidth={2.4} />} onClick={() => s.set('airdrop', !s.airdrop)} />
-        <div className="flex justify-between">
+        <div className="grid grid-cols-2 gap-2.5">
           <RoundButton label="Mission Control" icon={<LayoutPanelLeft size={22} />} onClick={() => d.setOverlay('mission')} />
           <RoundButton label="Launchpad" icon={<LayoutGrid size={22} />} onClick={() => d.setOverlay('launchpad')} />
         </div>
-        <div className="flex justify-between">
+        <div className="grid grid-cols-2 gap-2.5">
           <RoundButton on={dark} label={dark ? 'Dark Mode on' : 'Dark Mode off'} icon={<Contrast size={24} />} onClick={() => s.set('appearance', dark ? 'light' : 'dark')} />
           <RoundButton label="Lock Screen" icon={<Lock size={20} />} onClick={() => d.setSystem('locked')} />
         </div>
-        <Capsule round className="h-[62px]">
+        <Capsule round className="h-[64px]">
           <button type="button" role="switch" aria-checked={s.focus} aria-label="Focus" onClick={() => s.set('focus', !s.focus)} className="flex h-full w-full items-center gap-2 rounded-full pl-[9px] pr-3 active:scale-[.98]">
             <span className={`grid h-[44px] w-[44px] shrink-0 place-items-center rounded-full ${s.focus ? 'bg-[#5e5ce6] text-white' : 'bg-[var(--cc-disc)] text-[var(--cc-text)]'}`}>
               <Moon size={19} fill={s.focus ? 'currentColor' : 'none'} />
@@ -212,11 +215,11 @@ export function NotificationCenter() {
     <motion.aside
       data-panel
       aria-label="Notification Center"
-      initial={{ x: 40, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: 40, opacity: 0 }}
+      initial={{ x: 40 }}
+      animate={{ x: 0 }}
+      exit={{ x: 420, transition: { duration: 0.2 } }}
       transition={{ type: 'spring', stiffness: 380, damping: 36 }}
-      className="scroll-thin absolute bottom-2 right-2 top-[34px] z-[30] w-[360px] max-w-[calc(100vw-16px)] space-y-2.5 overflow-y-auto p-1"
+      className="glass-enter scroll-thin absolute bottom-2 right-2 top-[34px] z-[30] w-[360px] max-w-[calc(100vw-16px)] space-y-2.5 overflow-y-auto p-1"
     >
       <div className="flex items-center justify-between px-1 pb-0.5 pt-1">
         <span className="text-[22px] font-bold text-white" style={{ textShadow: '0 1px 8px rgba(0,0,0,.45)' }}>
@@ -271,9 +274,9 @@ export function Banner() {
         <motion.div
           key={banner.id + banner.time}
           role="status"
-          initial={{ x: 400, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: 400, opacity: 0 }}
+          initial={{ x: 400 }}
+          animate={{ x: 0 }}
+          exit={{ x: 400, transition: { duration: 0.12 } }}
           transition={{ type: 'spring', stiffness: 380, damping: 32 }}
           className="absolute right-3 top-[38px] z-[35] w-[350px] max-w-[calc(100vw-24px)]"
         >

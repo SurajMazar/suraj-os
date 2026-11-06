@@ -214,17 +214,17 @@ export const sounds = Object.fromEntries((Object.keys(synth) as SoundName[]).map
 
 /** For the Sound settings preview list. */
 export const soundCatalog: { name: SoundName; label: string }[] = [
-  { name: 'open', label: 'Open app' },
-  { name: 'close', label: 'Close window' },
+  { name: 'open', label: 'App opens' },
+  { name: 'close', label: 'Window closes' },
   { name: 'minimize', label: 'Minimize' },
   { name: 'restore', label: 'Restore' },
   { name: 'notify', label: 'Notification' },
   { name: 'toggleOn', label: 'Toggle on' },
   { name: 'toggleOff', label: 'Toggle off' },
-  { name: 'trash', label: 'Empty Trash' },
+  { name: 'trash', label: 'Trash emptied' },
   { name: 'sent', label: 'Message sent' },
   { name: 'error', label: 'Error' },
   { name: 'lock', label: 'Lock' },
   { name: 'unlock', label: 'Unlock' },
-  { name: 'startup', label: 'Startup' },
+  { name: 'startup', label: 'Startup chime' },
 ]

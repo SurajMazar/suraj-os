@@ -22,8 +22,8 @@ export function ContextMenu() {
     <div className="absolute inset-0 z-[50]" onPointerDown={() => useDesktop.getState().closeContextMenu()} onContextMenu={(e) => { e.preventDefault(); useDesktop.getState().closeContextMenu() }}>
       <motion.div
         ref={ref}
-        initial={{ opacity: 0, scale: 0.97 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ scale: 0.97 }}
+        animate={{ scale: 1 }}
         transition={{ duration: 0.1 }}
         className="absolute origin-top-left"
         style={{ left: pos?.x ?? menu.x, top: pos?.y ?? menu.y, visibility: pos ? 'visible' : 'hidden' }}

@@ -69,13 +69,13 @@ export function Spotlight() {
   const current = flat[active]?.item
 
   return (
-    <motion.div className="absolute inset-0 z-[40]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.12 }} onPointerDown={close}>
+    <motion.div className="absolute inset-0 z-[40]" initial={false} exit={{ visibility: 'hidden', transition: { duration: 0.12 } }} onPointerDown={close}>
       <motion.div
         role="dialog"
         aria-label="Spotlight Search"
-        initial={{ opacity: 0, scale: 0.96, y: -8 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.98 }}
+        initial={{ scale: 0.96, y: -8 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.98 }}
         transition={{ type: 'spring', stiffness: 500, damping: 34 }}
         className="liquid glass-strong absolute left-1/2 top-[18%] w-[min(680px,calc(100vw-32px))] -translate-x-1/2 overflow-hidden rounded-[16px] shadow-[0_30px_80px_rgba(0,0,0,.4),0_0_0_.5px_var(--border-strong)]"
         onPointerDown={(e) => e.stopPropagation()}

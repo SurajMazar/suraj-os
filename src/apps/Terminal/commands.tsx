@@ -370,7 +370,7 @@ export const commands: Record<string, { desc: string; run: Run; hidden?: boolean
   wallpaper: {
     desc: 'Change wallpaper: wallpaper <name>',
     run: (args) => {
-      const names: WallpaperId[] = ['chameleon', 'kathmandu', 'kathmandu-paint', 'liquid', 'aurora', 'himalaya', 'sunset', 'ocean', 'graphite']
+      const names: WallpaperId[] = ['desk', 'chameleon', 'kathmandu', 'kathmandu-paint', 'liquid', 'aurora', 'himalaya', 'sunset', 'ocean', 'graphite']
       const v = args[0] as WallpaperId
       if (!names.includes(v)) return <span className={C.red}>usage: wallpaper {names.join('|')}</span>
       useSettings.getState().set('wallpaper', v)

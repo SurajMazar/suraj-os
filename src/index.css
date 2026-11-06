@@ -393,3 +393,16 @@ textarea:focus-visible,
   border: 0;
   background: transparent;
 }
+
+/*
+ * Glass never fades: a fading surface (or parent) shows the sharp backdrop through it
+ * before the blur settles. It springs in at full material instead, like macOS.
+ */
+@keyframes glass-in {
+  from {
+    transform: scale(0.94);
+  }
+}
+.glass-enter .cc-glass {
+  animation: glass-in 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}

@@ -65,11 +65,11 @@ function StatusButton({ label, active, onClick, children }: { label: string; act
 function Dropdown({ children, right = 8, width = 280 }: { children: React.ReactNode; right?: number; width?: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: -4 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, transition: { duration: 0.1 } }}
+      initial={{ y: -4, scale: 0.98 }}
+      animate={{ y: 0, scale: 1 }}
+      exit={{ visibility: 'hidden', transition: { duration: 0 } }}
       transition={{ duration: 0.14 }}
-      className="menu-surface absolute top-[30px] z-[60] p-3 text-[13px] text-[var(--text)]"
+      className="menu-surface absolute top-[30px] z-[60] origin-top p-3 text-[13px] text-[var(--text)]"
       style={{ right, width, borderRadius: 14 }}
       onPointerDown={(e) => e.stopPropagation()}
     >
@@ -216,9 +216,9 @@ export function MenuBar() {
         {open && (
           <motion.div
             key="menu"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0, transition: { duration: 0.08 } }}
+            initial={{ y: -2 }}
+            animate={{ y: 0 }}
+            exit={{ visibility: 'hidden', transition: { duration: 0 } }}
             transition={{ duration: 0.08 }}
             className="absolute top-[27px] z-[60]"
             style={{ left: Math.min(open.left, window.innerWidth - 240) }}

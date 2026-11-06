@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 export type Appearance = 'light' | 'dark' | 'auto'
-export type WallpaperId = 'chameleon' | 'picture' | 'kathmandu' | 'kathmandu-paint' | 'liquid' | 'aurora' | 'himalaya' | 'sunset' | 'ocean' | 'graphite' | 'custom'
+export type WallpaperId = 'desk' | 'chameleon' | 'picture' | 'kathmandu' | 'kathmandu-paint' | 'liquid' | 'aurora' | 'himalaya' | 'sunset' | 'ocean' | 'graphite' | 'custom'
 
 export interface SettingsState {
   appearance: Appearance
@@ -33,7 +33,7 @@ interface SettingsActions {
 
 export const defaultSettings: SettingsState = {
   appearance: 'dark',
-  wallpaper: 'chameleon',
+  wallpaper: 'desk',
   customGradient: ['#4f46e5', '#ec4899'],
   dockSize: 52,
   dockMagnification: 1.7,
@@ -62,11 +62,11 @@ export const useSettings = create<SettingsState & SettingsActions>()(
     }),
     {
       name: 'surajos-settings',
-      version: 4,
-      // v4 made Suraj's chosen artwork the default wallpaper.
+      version: 5,
+      // v5 made the anime drawing of Suraj's own desk the default wallpaper.
       migrate: (state, version) => {
         const s = state as SettingsState
-        return version < 4 ? { ...s, wallpaper: 'chameleon' } : s
+        return version < 5 ? { ...s, wallpaper: 'desk' } : s
       },
     },
   ),
