@@ -178,6 +178,7 @@ const projectFolders: Spec[] = projects.map((p) => ({
 const appsFolder: Spec[] = (
   [
     ['About Me', 'about'],
+    ['Arcade', 'arcade'],
     ['Contact', 'contact'],
     ['Experience', 'experience'],
     ['Finder', 'finder'],

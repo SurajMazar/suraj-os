@@ -177,6 +177,18 @@ export const apps: Record<AppId, AppDefinition> = {
     keywords: ['date', 'month', 'milestones', 'timeline'],
     description: 'Today, and career milestones by month.',
   },
+  arcade: {
+    id: 'arcade',
+    name: 'Arcade',
+    component: lazy(() => import('./Arcade/Arcade')),
+    size: { w: 820, h: 620 },
+    minSize: { w: 420, h: 480 },
+    chromeless: true,
+    inDock: true,
+    inLaunchpad: true,
+    keywords: ['games', 'play', 'platformer', 'blocks', 'snake', 'bug hunt', 'memory', 'typing', 'fun'],
+    description: 'Six small games built for SurajOS.',
+  },
   aboutmac: {
     id: 'aboutmac',
     name: 'About This Mac',
@@ -205,6 +217,7 @@ export const dockOrder: AppId[] = [
   'safari',
   'github',
   'contact',
+  'arcade',
   'settings',
 ]
 

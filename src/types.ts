@@ -17,6 +17,7 @@ export type AppId =
   | 'launchpad'
   | 'aboutmac'
   | 'calendar'
+  | 'arcade'
 
 export interface Rect {
   x: number

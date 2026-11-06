@@ -1,5 +1,6 @@
 import type { AppId } from '@/types'
 import { apps, launchpadApps } from '@/apps/registry'
+import { gameList } from '@/apps/Arcade/scores'
 import { experience, portfolio, projects, skillGroups, skillNotes } from '@/portfolio.config'
 import { fs } from '@/data/fs'
 import { openApp } from '@/store/windowStore'
@@ -31,6 +32,9 @@ function build(): SearchItem[] {
   for (const id of [...launchpadApps, 'trash' as AppId]) {
     const a = apps[id]
     out.push({ id: `app:${id}`, title: a.name, subtitle: a.description, group: 'Applications', appId: id, keywords: [a.name, ...(a.keywords ?? [])].join(' '), run: () => openApp(id), preview: a.description })
+  }
+  for (const g of gameList) {
+    out.push({ id: `game:${g.id}`, title: g.name, subtitle: 'Game in Arcade', group: 'Applications', appId: 'arcade', keywords: `${g.name} ${g.keywords} game play arcade`, run: () => openApp('arcade', { game: g.id }), preview: g.tagline })
   }
   for (const p of projects) {
     out.push({

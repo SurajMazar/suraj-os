@@ -19,7 +19,7 @@ import type { AppId } from '@/types'
 /** Where the last tapped icon sits, so the app can zoom out of it like on iPhone. */
 let launchRect: DOMRect | null = null
 
-const grid: AppId[] = ['finder', 'experience', 'skills', 'terminal', 'safari', 'github', 'settings', 'trash']
+const grid: AppId[] = ['finder', 'experience', 'skills', 'terminal', 'safari', 'github', 'arcade', 'settings', 'trash']
 const dock: AppId[] = ['projects', 'about', 'resume', 'contact']
 
 function StatusBar({ light }: { light: boolean }) {

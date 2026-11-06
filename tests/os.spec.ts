@@ -259,7 +259,7 @@ test.describe('text overflow audit', () => {
     expect(found).toEqual([])
   })
 
-  for (const id of ['finder', 'about', 'projects', 'experience', 'skills', 'resume', 'terminal', 'safari', 'contact', 'settings', 'trash']) {
+  for (const id of ['finder', 'about', 'projects', 'experience', 'skills', 'resume', 'terminal', 'safari', 'contact', 'arcade', 'settings', 'trash']) {
     test(`app ${id}`, async ({ page }) => {
       await boot(page)
       await page.locator(`[data-dock-app="${id}"]`).click()

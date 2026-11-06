@@ -4,6 +4,7 @@ import {
   Compass,
   FileText,
   FolderOpen,
+  Gamepad2,
   LayoutGrid,
   Mail,
   Monitor,
@@ -84,6 +85,8 @@ function specFor(appId: AppId, size: number): IconSpec {
         ),
       }
     }
+    case 'arcade':
+      return { bg: g('#fb7185', '#7c3aed'), glyph: <Gamepad2 size={s} strokeWidth={stroke} /> }
     case 'aboutmac':
       return { bg: g('#93c5fd', '#1e3a8a'), glyph: <Monitor size={s} strokeWidth={stroke} /> }
   }
