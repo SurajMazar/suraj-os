@@ -56,7 +56,7 @@ Pushing to `main` builds the site and publishes it to GitHub Pages (`.github/wor
 
 ## Credits
 
-- **Night Desk** wallpaper: an anime redraw of Suraj's own desk, made with ChatGPT image generation.
+- **Desk** wallpaper (day and night versions): anime redraws of Suraj's own desk, made with ChatGPT image generation.
 - **Chameleon Reserve** wallpaper: artwork by **Craizuss**. All rights belong to the artist.
 - **Kathmandu** wallpapers: generated with ChatGPT image generation for this site.
 - System sounds are original, synthesized in the browser.

@@ -5,7 +5,7 @@ import { useUserWallpaper } from '@/lib/userWallpaper'
 import { useIsDark } from '@/hooks/system'
 
 export const wallpapers: { id: WallpaperId; name: string }[] = [
-  { id: 'desk', name: 'Night Desk' },
+  { id: 'desk', name: 'Desk (Day & Night)' },
   { id: 'chameleon', name: 'Chameleon Reserve' },
   { id: 'picture', name: 'Your Picture' },
   { id: 'kathmandu', name: 'Kathmandu' },
@@ -213,7 +213,8 @@ function Graphite({ dark }: { dark: boolean }) {
 export function WallpaperArt({ id, dark, custom }: { id: WallpaperId; dark: boolean; custom: [string, string] }) {
   switch (id) {
     case 'desk':
-      return <Picture src="./wallpapers/anime-desk.jpg" dark={dark} position="50% 50%" />
+      // A pair, like a macOS dynamic wallpaper: daytime for Light, night for Dark.
+      return <Picture src={dark ? './wallpapers/anime-desk.jpg' : './wallpapers/anime-desk-day.jpg'} dark={false} position="50% 50%" />
     case 'chameleon':
       return <Picture src="./wallpapers/chameleon-reserve.jpg" dark={dark} position="50% 45%" />
     case 'picture':
