@@ -39,7 +39,7 @@ const guardrail = portfolio.principles.find((p) => /overwrite/i.test(p.title))
 export const prologue: Line[] = [
   { text: '…h-hello? Is somebody there?', mood: 'glitch' },
   { text: 'Oh! A cursor! You can see me?', mood: 'surprised' },
-  { text: 'I’m Bit, the little helper who lives in this computer. At least, I think I am.', mood: 'neutral' },
+  { text: 'I’m Bit, the little helper who lives in this computer. I don’t even remember why I look like this.', mood: 'neutral' },
   { text: 'There was an update. Everything went bzzzt, and my memory broke into seven pieces.', mood: 'sad' },
   { text: 'I can feel them hiding in the apps around here. Will you help me find them?', mood: 'thinking' },
 ]
@@ -55,6 +55,7 @@ export const chapters: Chapter[] = [
     outro: () => [
       { text: `${portfolio.name}. ${portfolio.title}.`, mood: 'surprised' },
       { text: `${name} built this whole computer, from ${portfolio.location}. And ${name} built me.`, mood: 'happy' },
+      { text: 'Hold on… the glasses, the messy hair, the headphones. That’s my face! I’m a mini version of my builder.', mood: 'surprised' },
       { text: 'One piece back. I remember who made me!', mood: 'happy' },
     ],
     fragment: { title: 'The builder', text: portfolio.summary },

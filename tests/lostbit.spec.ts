@@ -2,6 +2,9 @@ import { expect, test, type Page } from '@playwright/test'
 
 const shots = process.env.ARCADE_SHOTS
 
+// A first-time visitor: nothing saved, so Lost Bit starts by itself.
+test.use({ storageState: { cookies: [], origins: [] } })
+
 test.beforeEach(async ({ page }) => {
   const errors: string[] = []
   page.on('pageerror', (e) => errors.push(e.message))
@@ -44,10 +47,9 @@ test.describe('Lost Bit on the desktop', () => {
   test('the whole story plays through', async ({ page }) => {
     test.slow()
     await boot(page)
-    await page.keyboard.press('Control+Space')
-    await page.keyboard.type('Lost Bit')
-    await page.keyboard.press('Enter')
-    await expect(page.locator('[data-bit]')).toBeVisible()
+    // No app to open: the mini character turns up on the desktop by itself.
+    await expect(page.locator('[data-bit]')).toBeVisible({ timeout: 6000 })
+    await expect(page.locator('[data-window-id]')).toHaveCount(0)
     await listen(page, 'bit-prologue')
     await bubble(page).getByRole('button', { name: 'Let’s find them' }).click()
     await listen(page)
@@ -100,15 +102,19 @@ test.describe('Lost Bit on the desktop', () => {
     await expect(bubble(page)).toBeVisible()
   })
 
-  test('Bit sits on the front window and can be put away', async ({ page }) => {
+  test('“Maybe later” puts the mini character away, even after a reload', async ({ page }) => {
     await boot(page)
-    await page.locator('[data-dock-app="arcade"]').click()
-    await page.getByRole('button', { name: /Story mode/ }).click()
     await listen(page)
     await bubble(page).getByRole('button', { name: 'Maybe later' }).click()
     await listen(page)
     await expect(page.locator('[data-bit]')).toBeHidden()
-    await page.getByRole('button', { name: 'Wake Bit up' }).click()
+    // A later visit leaves it alone, until the visitor asks for it from the Arcade.
+    await page.reload()
+    await page.getByRole('button', { name: /unlock/i }).click()
+    await page.waitForTimeout(3500)
+    await expect(page.locator('[data-bit]')).toBeHidden()
+    await page.locator('[data-dock-app="arcade"]').click()
+    await page.getByRole('button', { name: /Story mode/ }).click()
     await expect(page.locator('[data-bit]')).toBeVisible()
   })
 })
@@ -116,14 +122,12 @@ test.describe('Lost Bit on the desktop', () => {
 test.describe('Lost Bit on iPhone', () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true })
 
-  test('the story starts from the home screen and the first memory works', async ({ page }) => {
+  test('the story starts by itself on the home screen and the first memory works', async ({ page }) => {
     await boot(page)
-    await page.getByRole('button', { name: 'Lost Bit', exact: true }).tap()
     await listen(page)
     await bubble(page).getByRole('button', { name: 'Let’s find them' }).tap()
     await listen(page)
-    await page.getByRole('button', { name: 'Home', exact: true }).tap()
-    await page.waitForTimeout(500)
+    await page.waitForTimeout(800)
     if (shots) await page.screenshot({ path: `${shots}/bit-iphone.png` })
     await page.getByRole('button', { name: 'About Me', exact: true }).last().tap()
     await expect(bubble(page)).toBeVisible()

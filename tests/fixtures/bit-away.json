@@ -1,0 +1,9 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "http://localhost:5299",
+      "localStorage": [{ "name": "surajos-lostbit", "value": "{\"state\":{\"started\":true,\"chapter\":0,\"found\":[],\"away\":true,\"said\":[]},\"version\":1}" }]
+    }
+  ]
+}

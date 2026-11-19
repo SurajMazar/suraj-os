@@ -13,6 +13,8 @@ export default defineConfig({
   reporter: [['list']],
   use: {
     baseURL: 'http://localhost:5299',
+    // Lost Bit starts by itself for visitors; most tests begin with it put away so it stays out of their way.
+    storageState: 'tests/fixtures/bit-away.json',
     launchOptions: executablePath ? { executablePath } : {},
   },
   webServer: {

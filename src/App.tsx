@@ -35,24 +35,21 @@ export default function App() {
   useEffect(() => startEggWatchers(), [])
   useEffect(() => startQuestWatchers(), [])
 
-  // Lost Bit: the first time someone unlocks SurajOS, a hint that something is stirring on the desktop.
+  // Lost Bit runs by default: after unlocking, the mini character appears on the desktop and starts (or
+  // picks up) the story by itself. No window opens. Visitors who chose “Maybe later” are left alone.
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined
-    const tease = () => {
+    const begin = () => {
       timer = setTimeout(() => {
-        if (useQuest.getState().started) return
-        try {
-          if (localStorage.getItem('surajos-lostbit-teased')) return
-          localStorage.setItem('surajos-lostbit-teased', '1')
-        } catch {
-          // Storage blocked: tease anyway, once per visit.
-        }
-        useDesktop.getState().pushNotification({ id: 'lostbit', app: 'quest', title: 'Something is stirring…', body: 'A small voice is coming from Lost Bit.app on the desktop. It sounds lost.' })
-      }, 20000)
+        const q = useQuest.getState()
+        if (q.away || q.lines.length) return
+        if (!q.started) q.start()
+        else q.wake()
+      }, 2600)
     }
-    if (useDesktop.getState().system === 'on') tease()
+    if (useDesktop.getState().system === 'on') begin()
     const unsub = useDesktop.subscribe((s, prev) => {
-      if (s.system === 'on' && prev.system !== 'on') tease()
+      if (s.system === 'on' && prev.system !== 'on') begin()
     })
     return () => {
       unsub()

@@ -6,86 +6,119 @@ import { useIsMobile, useReduceMotion } from '@/hooks/system'
 import { useQuest } from './questStore'
 import type { Mood } from './story'
 
-const SIZE = 44
+/** The mascot's size on screen: 44 wide, a little taller than wide. */
+const W = 44
+const H = Math.round((W * 56) / 48)
 
-/** Bit, drawn in SVG: a round little helper with an antenna, big eyes and tiny feet. */
-export function BitSprite({ mood = 'neutral', look = 0, size = SIZE }: { mood?: Mood; look?: number; size?: number }) {
-  const px = Math.max(-1.6, Math.min(1.6, look * 1.6))
+/** Mini Suraj: a chibi of the builder, drawn from the profile photo: tousled black hair swept up, thin metal glasses, headphones round the neck and a teal sweater. */
+export function BitSprite({ mood = 'neutral', look = 0, size = W }: { mood?: Mood; look?: number; size?: number }) {
+  const px = Math.max(-1, Math.min(1, look)) * 0.9
+  const ink = '#2a1d16'
   const eye = (cx: number) => {
-    if (mood === 'happy') return <path d={`M${cx - 3.2} 23.5 q3.2 -4 6.4 0`} stroke="#1e1b4b" strokeWidth="2.2" fill="none" strokeLinecap="round" />
-    if (mood === 'sad')
-      return (
-        <g>
-          <ellipse cx={cx} cy="23.5" rx="3.4" ry="3.8" fill="#fff" />
-          <circle cx={cx + px * 0.6} cy="25" r="1.8" fill="#1e1b4b" />
-          <path d={`M${cx - 3.6} 18.6 l7 1.6`} stroke="#1e1b4b" strokeWidth="1.4" strokeLinecap="round" transform={cx > 22 ? `rotate(-20 ${cx} 19)` : `rotate(20 ${cx} 19)`} />
-        </g>
-      )
-    const r = mood === 'surprised' ? 4.4 : 3.6
+    if (mood === 'happy') return <path d={`M${cx - 2.4} 24.4 q2.4 -3 4.8 0`} stroke={ink} strokeWidth="1.5" fill="none" strokeLinecap="round" />
+    const rx = mood === 'surprised' ? 3.2 : 2.85
+    const ry = mood === 'surprised' ? 3.9 : mood === 'sad' ? 3 : 3.5
+    const cy = mood === 'thinking' ? 22.6 : mood === 'sad' ? 24.4 : 23.6
     return (
-      <g className="bit-blink" style={{ transformOrigin: `${cx}px 23px` }}>
-        <ellipse cx={cx} cy="23" rx={r} ry={r + 0.6} fill="#fff" />
-        <circle cx={cx + px} cy={mood === 'thinking' ? 21.6 : 23.4} r={mood === 'surprised' ? 2.4 : 2} fill="#1e1b4b" />
-        <circle cx={cx + px + 0.8} cy="22" r="0.7" fill="#fff" />
+      <g className="bit-blink" style={{ transformOrigin: `${cx}px 23.6px` }}>
+        <ellipse cx={cx + px} cy={cy} rx={rx} ry={ry} fill={ink} />
+        <ellipse cx={cx + px} cy={cy + 1.3} rx={rx * 0.72} ry={ry * 0.46} fill="#6b4430" />
+        <circle cx={cx + px + 0.9} cy={cy - 1.2} r="1.15" fill="#fff" />
+        <circle cx={cx + px - 0.9} cy={cy + 1.6} r=".5" fill="#fff" opacity=".85" />
       </g>
     )
   }
+  const brow = (cx: number, side: 1 | -1) => {
+    const lift = mood === 'surprised' ? -1.4 : mood === 'thinking' ? -0.6 : 0
+    const tilt = mood === 'sad' ? side * 1.1 : mood === 'glitch' ? -side * 0.8 : 0
+    return <path d={`M${cx - 2.4} ${18.6 + lift + tilt} L${cx + 2.4} ${18.6 + lift - tilt}`} stroke="#1b1720" strokeWidth="1.1" strokeLinecap="round" />
+  }
+  const mouth =
+    mood === 'surprised' ? (
+      <ellipse cx="24" cy="30.4" rx="1.4" ry="1.7" fill="#7a3b2e" />
+    ) : mood === 'sad' ? (
+      <path d="M22.2 31 q1.8 -1.3 3.6 0" stroke="#7a3b2e" strokeWidth="1.1" fill="none" strokeLinecap="round" />
+    ) : mood === 'happy' ? (
+      <path d="M21.6 29.2 q2.4 2.6 4.8 0 z" fill="#7a3b2e" />
+    ) : (
+      <path d="M22.3 29.6 q1.7 1.3 3.4 0" stroke="#7a3b2e" strokeWidth="1.1" fill="none" strokeLinecap="round" />
+    )
   return (
-    <svg width={size} height={size} viewBox="0 0 44 44" className={mood === 'glitch' ? 'bit-glitch' : undefined} aria-hidden>
-      <defs>
-        <radialGradient id="bit-body" cx="35%" cy="30%" r="75%">
-          <stop offset="0" stopColor="#a5f3fc" />
-          <stop offset=".55" stopColor="#22d3ee" />
-          <stop offset="1" stopColor="#7c3aed" />
-        </radialGradient>
-      </defs>
-      {/* antenna */}
-      <path d="M22 10 Q23.5 6 26 4.6" stroke="#7c3aed" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-      <circle cx="26.4" cy="4.4" r="2.6" fill="#fde047" className="bit-glow" />
-      {/* feet */}
-      <ellipse cx="16" cy="40.4" rx="4" ry="2.2" fill="#5b21b6" />
-      <ellipse cx="28" cy="40.4" rx="4" ry="2.2" fill="#5b21b6" />
-      {/* body */}
-      <circle cx="22" cy="24.5" r="15.5" fill="url(#bit-body)" />
-      <ellipse cx="16.5" cy="16" rx="5" ry="3" fill="#fff" opacity=".45" />
-      {eye(16.4)}
-      {eye(27.6)}
-      <ellipse cx="12.6" cy="29" rx="2.4" ry="1.4" fill="#f472b6" opacity=".55" />
-      <ellipse cx="31.4" cy="29" rx="2.4" ry="1.4" fill="#f472b6" opacity=".55" />
-      {mood === 'surprised' ? (
-        <ellipse cx="22" cy="31" rx="1.8" ry="2.2" fill="#1e1b4b" />
-      ) : mood === 'sad' ? (
-        <path d="M19 32 q3 -2.4 6 0" stroke="#1e1b4b" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-      ) : (
-        <path d="M19 30.4 q3 2.6 6 0" stroke="#1e1b4b" strokeWidth="1.6" fill="none" strokeLinecap="round" />
-      )}
+    <svg width={size} height={(size * 56) / 48} viewBox="0 0 48 56" className={mood === 'glitch' ? 'bit-glitch' : undefined} aria-hidden>
+      {/* shoes */}
+      <ellipse cx="19" cy="54" rx="4" ry="1.9" fill="#26232e" />
+      <ellipse cx="29" cy="54" rx="4" ry="1.9" fill="#26232e" />
+      {/* arms and hands */}
+      <rect x="9.4" y="39.5" width="5.6" height="10" rx="2.8" fill="#1d6f86" />
+      <rect x="33" y="39.5" width="5.6" height="10" rx="2.8" fill="#1d6f86" />
+      <circle cx="12.2" cy="49.6" r="2.1" fill="#eabf98" />
+      <circle cx="35.8" cy="49.6" r="2.1" fill="#eabf98" />
+      {/* teal sweater */}
+      <path d="M14 41 Q14 36.4 19 36 L29 36 Q34 36.4 34 41 L34 50 Q34 53 31 53 L17 53 Q14 53 14 50 Z" fill="#23809a" />
+      <path d="M14 47 L34 47 L34 50 Q34 53 31 53 L17 53 Q14 53 14 50 Z" fill="#1b6c83" />
+      <path d="M20.4 36.2 Q24 39.4 27.6 36.2" stroke="#186277" strokeWidth="1.3" fill="none" strokeLinecap="round" />
+      {/* neck */}
+      <rect x="21.6" y="32.6" width="4.8" height="4" rx="1.6" fill="#e2b48c" />
+      {/* headphones round the neck */}
+      <path d="M15.6 36.4 Q24 42.2 32.4 36.4" stroke="#15151b" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+      <rect x="12.4" y="33" width="5" height="6.6" rx="2.2" fill="#1b1b22" />
+      <rect x="30.6" y="33" width="5" height="6.6" rx="2.2" fill="#1b1b22" />
+      <rect x="13.4" y="34" width="1.4" height="4.4" rx=".7" fill="#4a4a58" />
+      <rect x="33.2" y="34" width="1.4" height="4.4" rx=".7" fill="#4a4a58" />
+      {/* ears and face */}
+      <ellipse cx="11.6" cy="23.6" rx="1.9" ry="2.6" fill="#e6b791" />
+      <ellipse cx="36.4" cy="23.6" rx="1.9" ry="2.6" fill="#e6b791" />
+      <path d="M11.4 21 Q11.6 33.4 24 33.6 Q36.4 33.4 36.6 21 Q36 9.6 24 9.4 Q12 9.6 11.4 21 Z" fill="#f0c7a2" />
+      {/* black hair swept up and tousled to one side, forehead clear, a wave at the temple */}
+      <path
+        d="M11.2 22 C10.4 16 11.6 11 15 8.2 L14.2 4.6 L18.4 6.4 L19.6 1.8 L23.2 5.2 L26 0.8 L28 5 L32.8 2.2 L32.4 6.6 L37.2 6 L35.6 10.2 C37.6 13 38 17.5 36.8 22 C36 18 34.6 16 32.2 14.8 C29 13.4 26.4 13.6 24 14.2 C21.2 13.4 18 13.8 15.8 15 C13.6 16.4 12 18.6 11.2 22 Z"
+        fill="#16141c"
+      />
+      <path d="M32.6 14.6 q2.6 1.2 3.6 4.4 q-1.8 -1.8 -4.2 -2.6 Z" fill="#16141c" />
+      <path d="M18.6 6 L20 8.6 M25.6 3 L25.8 6.2 M31 4.6 L30.2 7.4" stroke="#3a3646" strokeWidth=".8" strokeLinecap="round" />
+      {brow(18.6, 1)}
+      {brow(29.4, -1)}
+      {eye(18.6)}
+      {eye(29.4)}
+      {/* thin, light metal glasses, slightly squarish */}
+      <g stroke="#a39789" strokeWidth=".95" fill="rgba(255,255,255,.12)">
+        <rect x="14.1" y="19.5" width="9" height="8.3" rx="3.6" />
+        <rect x="24.9" y="19.5" width="9" height="8.3" rx="3.6" />
+      </g>
+      <path d="M23.1 22.2 Q24 21.4 24.9 22.2 M14.1 22.4 L11.8 21.8 M33.9 22.4 L36.2 21.8" stroke="#a39789" strokeWidth=".85" fill="none" strokeLinecap="round" />
+      <path d="M15.6 21.4 Q16.4 20.4 17.8 20.2 M26.4 21.4 Q27.2 20.4 28.6 20.2" stroke="#fff" strokeWidth=".7" opacity=".7" fill="none" strokeLinecap="round" />
+      {/* blush and mouth */}
+      <ellipse cx="14.8" cy="28.4" rx="2" ry="1.1" fill="#f08a8a" opacity=".38" />
+      <ellipse cx="33.2" cy="28.4" rx="2" ry="1.1" fill="#f08a8a" opacity=".38" />
+      <path d="M21.8 28.3 q2.2 -0.8 4.4 0" stroke="#8a6248" strokeWidth=".7" opacity=".35" fill="none" strokeLinecap="round" />
+      {mouth}
     </svg>
   )
 }
 
 /** Where Bit should be right now: pointing at an app, sitting on the front window, or resting by the Dock. */
 function targetFor(point: string | null, perch: number, mobile: boolean): { x: number; y: number; sitting: boolean } {
-  const W = innerWidth
-  const H = innerHeight
+  const VW = innerWidth
+  const VH = innerHeight
   if (point) {
     const el = document.querySelector(`[data-dock-app="${point}"], [data-home-app="${point}"]`)
     const r = el?.getBoundingClientRect()
-    if (r && r.width && r.top < H - 4) return { x: r.left + r.width / 2 - SIZE / 2, y: r.top - SIZE - 14, sitting: false }
+    if (r && r.width && r.top < VH - 4) return { x: r.left + r.width / 2 - W / 2, y: r.top - H - 14, sitting: false }
   }
   if (mobile) {
     const sheet = document.querySelector('.mobile-app')
-    return sheet ? { x: W - SIZE - 12, y: H - SIZE - 40, sitting: true } : { x: W - SIZE - 18, y: H - SIZE - 150, sitting: true }
+    return sheet ? { x: VW - W - 12, y: VH - H - 40, sitting: true } : { x: VW - W - 18, y: VH - H - 150, sitting: true }
   }
   const ws = useWindows.getState()
   const front = ws.focusedId ? ws.windows[ws.focusedId] : null
   if (front && !front.minimized) {
     const el = document.querySelector(`[data-window-id="${front.id}"]:not([data-closing])`)
     const r = el?.getBoundingClientRect()
-    if (r && r.top > 40) return { x: r.left + 90 + perch * Math.max(0, r.width - 180) - SIZE / 2, y: r.top - SIZE + 3, sitting: true }
+    if (r && r.top > 40) return { x: r.left + 90 + perch * Math.max(0, r.width - 180) - W / 2, y: r.top - H + 3, sitting: true }
   }
   const dock = document.querySelector('[data-dock-divider]')?.parentElement?.getBoundingClientRect()
-  const top = dock && dock.top < H ? dock.top : H - 70
-  return { x: W * (0.62 + perch * 0.25) - SIZE / 2, y: top - SIZE - 2, sitting: true }
+  const top = dock && dock.top < VH ? dock.top : VH - 70
+  return { x: VW * (0.62 + perch * 0.25) - W / 2, y: top - H - 2, sitting: true }
 }
 
 /** The speech bubble, typing its line out. A click finishes the line, another moves on. */
@@ -207,7 +240,7 @@ export function Bit() {
   const mood = q.lines.length ? (q.lines[q.index]?.mood ?? q.mood) : (q.aside?.mood ?? 'neutral')
 
   return (
-    <div ref={box} className="pointer-events-auto fixed left-0 top-0 z-[60] touch-none select-none" style={{ width: SIZE, height: SIZE, transform: `translate3d(${pos.current.x}px, ${pos.current.y}px, 0)` }} data-bit>
+    <div ref={box} className="pointer-events-auto fixed left-0 top-0 z-[60] touch-none select-none" style={{ width: W, height: H, transform: `translate3d(${pos.current.x}px, ${pos.current.y}px, 0)` }} data-bit>
       <button
         type="button"
         aria-label="Bit, your guide. Click to talk."
