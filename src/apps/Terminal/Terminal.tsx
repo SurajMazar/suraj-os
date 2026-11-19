@@ -6,6 +6,7 @@ import { useAppCommand } from '@/lib/appEvents'
 import { useWindows } from '@/store/windowStore'
 import { portfolio } from '@/portfolio.config'
 import { commandNames, commands, complete, shortPath, tokenize, type Ctx } from './commands'
+import { emitQuest } from '@/quest/questStore'
 
 interface Entry {
   id: number
@@ -101,6 +102,7 @@ export default function Terminal({ windowId }: AppProps) {
     else {
       try {
         entry.output = cmd.run(args, ctx)
+        emitQuest(`cmd:${name}`)
       } catch {
         entry.output = <span className="text-[#f87171]">{name}: something went wrong</span>
       }

@@ -10,6 +10,8 @@ import { useUserWallpaper } from '@/lib/userWallpaper'
 import { Effects } from '@/components/desktop/Effects'
 import { consoleGreeting } from '@/lib/easterEggs'
 import { startEggWatchers } from '@/lib/eggWatchers'
+import { Bit } from '@/quest/Bit'
+import { startQuestWatchers, useQuest } from '@/quest/questStore'
 
 
 const MobileShell = lazy(() => import('@/components/mobile/MobileShell'))
@@ -31,6 +33,32 @@ export default function App() {
 
   // Easter eggs that come from how the OS is used: key sequences, restarts, windows, the time of a visit.
   useEffect(() => startEggWatchers(), [])
+  useEffect(() => startQuestWatchers(), [])
+
+  // Lost Bit: the first time someone unlocks SurajOS, a hint that something is stirring on the desktop.
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined
+    const tease = () => {
+      timer = setTimeout(() => {
+        if (useQuest.getState().started) return
+        try {
+          if (localStorage.getItem('surajos-lostbit-teased')) return
+          localStorage.setItem('surajos-lostbit-teased', '1')
+        } catch {
+          // Storage blocked: tease anyway, once per visit.
+        }
+        useDesktop.getState().pushNotification({ id: 'lostbit', app: 'quest', title: 'Something is stirring…', body: 'A small voice is coming from Lost Bit.app on the desktop. It sounds lost.' })
+      }, 20000)
+    }
+    if (useDesktop.getState().system === 'on') tease()
+    const unsub = useDesktop.subscribe((s, prev) => {
+      if (s.system === 'on' && prev.system !== 'on') tease()
+    })
+    return () => {
+      unsub()
+      clearTimeout(timer)
+    }
+  }, [])
 
   useEffect(() => {
     if (getSettings().startupOnLoad) useDesktop.getState().setSystem('booting', 'load')
@@ -77,6 +105,7 @@ export default function App() {
         <Desktop />
       )}
       <Effects />
+      <Bit />
       </ErrorBoundary>
     </MotionConfig>
   )

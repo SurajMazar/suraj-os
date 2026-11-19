@@ -2,6 +2,8 @@ import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
 import { Bug, ChevronLeft, Flag } from 'lucide-react'
 import type { AppProps } from '@/types'
 import { Spinner } from '@/components/shared/ui'
+import { BitSprite } from '@/quest/Bit'
+import { openApp } from '@/store/windowStore'
 import { useIsMobile } from '@/hooks/system'
 import { formatTime, gameList, useScores, type GameId } from './scores'
 
@@ -228,6 +230,20 @@ export default function Arcade({ windowId, props }: AppProps) {
             <h1 className="text-[22px] font-bold leading-tight">Take a break</h1>
             <p className="mt-0.5 text-[13px] text-[var(--text-2)]">Six small games, built from scratch for SurajOS. Best scores stay in this browser.</p>
           </div>
+          <button
+            type="button"
+            onClick={() => openApp('quest')}
+            className="mb-4 flex w-full items-center gap-4 rounded-[12px] p-4 text-left text-white shadow-[0_1px_2px_rgba(0,0,0,.06)] transition-shadow hover:shadow-[0_6px_20px_rgba(0,0,0,.15)]"
+            style={{ background: 'linear-gradient(135deg, #312e81, #7c3aed 55%, #0891b2)' }}
+          >
+            <BitSprite mood="happy" size={56} />
+            <span className="min-w-0 flex-1">
+              <span className="block text-[11px] font-semibold uppercase tracking-wide text-white/70">Story mode</span>
+              <span className="block text-[15px] font-semibold">Lost Bit</span>
+              <span className="block text-[12.5px] text-white/80">A desktop adventure: help a lost little helper piece its memory back together.</span>
+            </span>
+            <span className="shrink-0 rounded-full bg-white px-3 py-1 text-[12px] font-semibold text-violet-700">Play</span>
+          </button>
           <div className="grid grid-cols-1 gap-4 @[480px]:grid-cols-2">
             {GAMES.map((g) => {
               const b = g.best(best)

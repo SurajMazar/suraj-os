@@ -18,6 +18,7 @@ import {
 import type { AppId } from '@/types'
 import { portfolio } from '@/portfolio.config'
 import { GitHubMark } from './BrandIcons'
+import { BitSprite } from '@/quest/Bit'
 
 interface IconSpec {
   bg: string
@@ -88,6 +89,8 @@ function specFor(appId: AppId, size: number): IconSpec {
     }
     case 'arcade':
       return { bg: g('#fb7185', '#7c3aed'), glyph: <Gamepad2 size={s} strokeWidth={stroke} /> }
+    case 'quest':
+      return { bg: g('#312e81', '#0891b2'), glyph: <BitSprite mood="happy" size={Math.round(size * 0.72)} /> }
     case 'player':
       return { bg: g('#3f3f46', '#09090b'), glyph: <Clapperboard size={s} strokeWidth={stroke} /> }
     case 'aboutmac':

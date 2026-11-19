@@ -259,10 +259,15 @@ test.describe('text overflow audit', () => {
     expect(found).toEqual([])
   })
 
-  for (const id of ['finder', 'about', 'projects', 'experience', 'skills', 'resume', 'terminal', 'safari', 'contact', 'arcade', 'settings', 'trash']) {
+  for (const id of ['finder', 'about', 'projects', 'experience', 'skills', 'resume', 'terminal', 'safari', 'contact', 'arcade', 'settings', 'trash', 'quest']) {
     test(`app ${id}`, async ({ page }) => {
       await boot(page)
-      await page.locator(`[data-dock-app="${id}"]`).click()
+      if (id === 'quest') {
+        // Lost Bit lives on the desktop and in Launchpad, not the Dock.
+        await page.keyboard.press('Control+Space')
+        await page.keyboard.type('Lost Bit')
+        await page.keyboard.press('Enter')
+      } else await page.locator(`[data-dock-app="${id}"]`).click()
       await page.waitForTimeout(1500)
       expect(await findOverflow(page, '[data-window-id]')).toEqual([])
     })

@@ -48,7 +48,7 @@ test('Spotlight does a barrel roll', async ({ page }) => {
 test('Terminal hides matrix, coffee, rm -rf / and the eggs list', async ({ page }) => {
   await boot(page)
   await terminal(page, 'eggs')
-  await expect(page.locator('[data-terminal]')).toContainText('Easter eggs: 0 of 62 found')
+  await expect(page.locator('[data-terminal]')).toContainText('Easter eggs: 0 of 63 found')
   await terminal(page, 'coffee')
   await expect(page.locator('[data-terminal]')).toContainText('Brewing')
   await terminal(page, 'matrix')
@@ -60,7 +60,7 @@ test('Terminal hides matrix, coffee, rm -rf / and the eggs list', async ({ page 
   await expect(page.getByRole('alertdialog', { name: 'Pretend crash' })).toBeVisible()
   await expect(page.getByRole('alertdialog', { name: 'Pretend crash' })).toBeHidden({ timeout: 6000 })
   await terminal(page, 'eggs')
-  await expect(page.locator('[data-terminal]')).toContainText('Easter eggs: 3 of 62 found')
+  await expect(page.locator('[data-terminal]')).toContainText('Easter eggs: 3 of 63 found')
   expect((await found(page)).sort()).toEqual(['coffee', 'matrix', 'panic'])
 })
 
@@ -73,7 +73,7 @@ test('seven clicks on the About This Mac logo', async ({ page }) => {
   await expect(page.getByText('You are 3 steps away from being a developer.')).toBeVisible()
   for (let i = 0; i < 3; i++) await logo.click()
   await expect(page.getByText('You are now a developer. (You already were.)')).toBeVisible()
-  await expect(page.getByText('Easter eggs found: 1 of 62')).toBeVisible()
+  await expect(page.getByText('Easter eggs found: 1 of 63')).toBeVisible()
 })
 
 test('opening spicy.mp4 counts as an egg', async ({ page }) => {
@@ -154,7 +154,7 @@ test('every hidden Terminal command finds its egg', async ({ page }) => {
   ]
   const got = await found(page)
   for (const id of ids) expect(got, id).toContain(id)
-  await expect(page.locator('[data-terminal]')).toContainText(/Easter eggs: \d+ of 62 found/)
+  await expect(page.locator('[data-terminal]')).toContainText(/Easter eggs: \d+ of 63 found/)
   await expect(page.locator('[data-terminal]')).toContainText('up ')
 })
 

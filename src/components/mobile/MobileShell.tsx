@@ -19,7 +19,7 @@ import type { AppId } from '@/types'
 /** Where the last tapped icon sits, so the app can zoom out of it like on iPhone. */
 let launchRect: DOMRect | null = null
 
-const grid: AppId[] = ['finder', 'experience', 'skills', 'terminal', 'safari', 'github', 'arcade', 'settings', 'trash']
+const grid: AppId[] = ['finder', 'experience', 'skills', 'terminal', 'safari', 'github', 'arcade', 'quest', 'settings', 'trash']
 const dock: AppId[] = ['projects', 'about', 'resume', 'contact']
 
 function StatusBar({ light }: { light: boolean }) {
@@ -47,6 +47,7 @@ function Icon({ id, label = true }: { id: AppId; label?: boolean }) {
       }}
       className="flex flex-col items-center gap-1.5"
       aria-label={apps[id].name}
+      data-home-app={id}
     >
       <AppIcon appId={id} size={60} />
       {label && <span className="max-w-[72px] truncate text-[11.5px] font-medium text-white" style={{ textShadow: '0 1px 2px rgba(0,0,0,.7), 0 0 8px rgba(0,0,0,.35)' }}>{apps[id].name}</span>}

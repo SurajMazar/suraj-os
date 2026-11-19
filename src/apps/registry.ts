@@ -189,6 +189,18 @@ export const apps: Record<AppId, AppDefinition> = {
     keywords: ['games', 'play', 'platformer', 'blocks', 'snake', 'bug hunt', 'memory', 'typing', 'fun'],
     description: 'Six small games built for SurajOS.',
   },
+  quest: {
+    id: 'quest',
+    name: 'Lost Bit',
+    component: lazy(() => import('./Quest/Quest')),
+    size: { w: 560, h: 620 },
+    minSize: { w: 380, h: 420 },
+    chromeless: true,
+    inDock: false,
+    inLaunchpad: true,
+    keywords: ['game', 'story', 'adventure', 'bit', 'quest', 'desktop adventure'],
+    description: 'A desktop adventure: help Bit find its lost memories.',
+  },
   player: {
     id: 'player',
     name: 'Video',

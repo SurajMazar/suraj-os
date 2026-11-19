@@ -19,6 +19,7 @@ export type AppId =
   | 'calendar'
   | 'arcade'
   | 'player'
+  | 'quest'
 
 export interface Rect {
   x: number

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { ArrowUpRight, Briefcase, ChevronLeft, Code, FolderGit2, Globe, LayoutGrid, List, Sparkles } from 'lucide-react'
 import type { AppProps } from '@/types'
+import { emitQuest } from '@/quest/questStore'
 import { projects, type Project, type ProjectCategory } from '@/portfolio.config'
 import { useAppCommand } from '@/lib/appEvents'
 import { openApp, useWindows } from '@/store/windowStore'
@@ -115,6 +116,10 @@ export default function Projects({ windowId, props }: AppProps) {
   const [query, setQuery] = useState('')
   const [view, setView] = useState<'grid' | 'list'>('grid')
   const [openId, setOpenId] = useState<string | null>((props.projectId as string) ?? null)
+  // Lost Bit: looking at a project is one of Bit's memories.
+  useEffect(() => {
+    if (openId) emitQuest('project', openId)
+  }, [openId])
 
   useEffect(() => {
     if (props.projectId) setOpenId(props.projectId as string)

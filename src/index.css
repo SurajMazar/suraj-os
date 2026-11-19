@@ -429,3 +429,66 @@ textarea:focus-visible,
     transform: scaleX(1);
   }
 }
+
+/* Bit, the Lost Bit guide: blinking, a glowing antenna, a glitchy wake-up and a bouncing pointer. */
+@keyframes bit-blink {
+  0%, 92%, 100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+.bit-blink {
+  animation: bit-blink 4.2s infinite;
+}
+@keyframes bit-glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+.bit-glow {
+  animation: bit-glow 1.6s ease-in-out infinite;
+}
+@keyframes bit-glitch {
+  0%, 100% {
+    transform: translate(0);
+    filter: none;
+  }
+  20% {
+    transform: translate(-2px, 1px);
+    filter: drop-shadow(2px 0 #f43f5e) drop-shadow(-2px 0 #22d3ee);
+  }
+  40% {
+    transform: translate(2px, -1px);
+  }
+  60% {
+    transform: translate(-1px, 0);
+    filter: drop-shadow(-2px 0 #f43f5e) drop-shadow(2px 0 #22d3ee);
+  }
+}
+.bit-glitch {
+  animation: bit-glitch 0.35s steps(2) infinite;
+}
+@keyframes bit-point {
+  0%, 100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, 5px);
+  }
+}
+.bit-point {
+  animation: bit-point 0.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bit-blink,
+  .bit-glow,
+  .bit-glitch,
+  .bit-point {
+    animation: none;
+  }
+}

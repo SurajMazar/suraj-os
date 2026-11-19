@@ -10,6 +10,7 @@ import { portfolio } from '@/portfolio.config'
  */
 export const eggs = [
   // Around the desktop
+  { id: 'lostbit', title: 'Memory restored', hint: 'Help Bit, the lost little helper, remember everything. Look for Lost Bit on the desktop.' },
   { id: 'spicy', title: 'Spicy', hint: 'Somebody threw away a video. Check the bin.' },
   { id: 'konami', title: 'Cheat code', hint: 'An old console cheat, typed on the desktop: ↑ ↑ ↓ ↓ ← → ← → B A.' },
   { id: 'developer', title: 'Developer mode', hint: 'Click the logo in About This Mac. Then keep clicking.' },

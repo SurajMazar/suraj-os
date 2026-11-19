@@ -8,6 +8,8 @@ import { useDesktop } from '@/store/desktopStore'
 import { openApp } from '@/store/windowStore'
 import { useIsTouch } from '@/hooks/system'
 import { discover, shake, type EggId } from '@/lib/easterEggs'
+import { emitQuest, useQuest } from '@/quest/questStore'
+import { chapters } from '@/quest/story'
 
 /** Each piece of junk is an Easter egg: opening it shows how it reacts. */
 const junk: { name: string; note: string; egg: EggId; reaction?: string; youtube?: string }[] = [
@@ -24,6 +26,8 @@ export default function TrashApp(_: AppProps) {
   const [items, setItems] = useState(junk)
   const [hover, setHover] = useState<string | null>(null)
   const touch = useIsTouch()
+  // Lost Bit: during its chapter, Bit's own lost file sits in the Trash.
+  const fragHere = useQuest((s) => s.started && !s.away && chapters[s.chapter - 1]?.event === 'trash:fragment' && !s.found.includes(chapters[s.chapter - 1].id))
   const [opened, setOpened] = useState<Record<string, true>>({})
   const play = (it: (typeof junk)[number]) => {
     discover(it.egg)
@@ -42,7 +46,7 @@ export default function TrashApp(_: AppProps) {
         <span className="flex-1 text-[15px] font-bold">Trash</span>
         <Button
           size="sm"
-          disabled={!items.length}
+          disabled={!items.length && !fragHere}
           onClick={() => {
             sounds.trash()
             setItems([])
@@ -62,6 +66,20 @@ export default function TrashApp(_: AppProps) {
           </div>
         ) : (
           <div className="grid grid-cols-[repeat(auto-fill,minmax(130px,1fr))] gap-2">
+            {fragHere ? (
+              <button
+                type="button"
+                aria-label="memory.frag"
+                onDoubleClick={() => emitQuest('trash:fragment')}
+                onClick={() => touch && emitQuest('trash:fragment')}
+                onKeyDown={(e) => e.key === 'Enter' && emitQuest('trash:fragment')}
+                className="flex flex-col items-center gap-1.5 rounded-[10px] p-2 text-center ring-2 ring-[var(--accent)] hover:bg-[var(--hover)]"
+              >
+                <div className="grid h-12 w-10 place-items-center rounded-[4px] bg-gradient-to-b from-cyan-300 to-violet-600 text-[9px] font-bold text-white shadow-[0_1px_3px_rgba(0,0,0,.3)]">FRAG</div>
+                <span className="text-[12px]">memory.frag</span>
+                <span className="text-[11px] leading-snug text-[var(--accent)]">This one hums softly.</span>
+              </button>
+            ) : null}
             <AnimatePresence>
               {items.map((it, i) => (
                 <motion.button

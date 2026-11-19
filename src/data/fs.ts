@@ -215,6 +215,7 @@ add(
                 children: [
                   { name: 'Welcome.md', kind: 'text', content: welcome },
                   { name: 'About Me.app', kind: 'app', appId: 'about' },
+                  { name: 'Lost Bit.app', kind: 'app', appId: 'quest' },
                   { name: 'Resume.pdf', kind: 'pdf' },
                   { name: 'Contact.vcf', kind: 'vcf' },
                   { name: 'Projects', kind: 'folder', id: `${HOME()}/Desktop/Projects`, children: [] },
